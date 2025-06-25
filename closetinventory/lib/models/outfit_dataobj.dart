@@ -18,8 +18,8 @@ class Outfit {
     this.stylingNotes,
     this.warCount = 0,
     this.lastWornDate,
-    required this.createdDate,
-  });
+    Timestamp? createdDate,
+  }) : createdDate = createdDate ?? Timestamp.now();
 
   factory Outfit.fromJson(Map<String, dynamic> json) {
     return Outfit(

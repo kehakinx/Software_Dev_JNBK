@@ -1,24 +1,23 @@
-import 'package:uuid/uuid.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WEARLOG {
   final String logId;
   final String userId;
   final String itemId;
   final String outfitId;
-  final DateTime wearDate;
+  final Timestamp wearDate;
   final String? notes;
-  final DateTime createdDate;
+  final Timestamp createdDate;
 
   WEARLOG({
-    String? logId,
+    required this.logId,
     required this.userId,
     required this.itemId,
     required this.outfitId,
     required this.wearDate,
     this.notes,
-    DateTime? createdDate,
-  }) : logId = logId ?? const Uuid().v4(),
-       createdDate = createdDate ?? DateTime.now();
+    Timestamp? createdDate,
+  }) : createdDate = createdDate ?? Timestamp.now();
 
   // Example: toJson for serialization
   Map<String, dynamic> toJson() => {
@@ -26,9 +25,9 @@ class WEARLOG {
     'userId': userId,
     'itemId': itemId,
     'outfitId': outfitId,
-    'wearDate': wearDate.toIso8601String(),
+    'wearDate': wearDate,
     'notes': notes,
-    'createdDate': createdDate.toIso8601String(),
+    'createdDate': createdDate,
   };
 
   // Example: fromJson for deserialization
@@ -37,10 +36,8 @@ class WEARLOG {
     userId: json['userId'],
     itemId: json['itemId'],
     outfitId: json['outfitId'],
-    wearDate: DateTime.parse(json['wearDate']),
+    wearDate: Timestamp.fromMillisecondsSinceEpoch(json['wearDate']),
     notes: json['notes'],
-    createdDate: json['createdDate'] != null
-        ? DateTime.parse(json['createdDate'])
-        : null,
+    createdDate: json['createdDate'] as Timestamp,
   );
 }

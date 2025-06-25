@@ -14,8 +14,8 @@ class USER {
     required this.displayName,
     this.profileImageUrl,
     required this.preference,
-    required this.createdDate,
-  });
+    Timestamp? createdDate,
+  }) : createdDate = createdDate ?? Timestamp.now();
 
   factory USER.fromJson(Map<String, dynamic> json) {
     return USER(

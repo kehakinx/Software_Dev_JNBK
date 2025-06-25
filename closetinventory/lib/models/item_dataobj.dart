@@ -16,11 +16,11 @@ class Item {
   final List<String>? tags;
   final Map<String, dynamic>? customAttributes;
   final String? currentLocationId;
-  final int? wearCount;
+  final int wearCount;
   final Timestamp? lastWornDate;
   final String? declutterStatus;
   final bool isDuplicateSuggestion;
-  final Timestamp? createdDate;
+  final Timestamp createdDate;
 
   Item({
     required this.itemId,
@@ -42,8 +42,8 @@ class Item {
     this.lastWornDate,
     this.declutterStatus,
     this.isDuplicateSuggestion = false,
-    this.createdDate,
-  });
+    Timestamp? createdDate,
+  }) : createdDate = createdDate ?? Timestamp.now();
 
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(

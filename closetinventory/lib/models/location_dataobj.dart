@@ -12,8 +12,8 @@ class Location {
     required this.userId,
     required this.name,
     this.description,
-    required this.createdDate,
-  });
+    Timestamp? createdDate,
+  }) : createdDate = createdDate ?? Timestamp.now();
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
