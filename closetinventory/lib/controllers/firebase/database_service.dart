@@ -50,6 +50,32 @@ class FirebaseDataServices {
   }
 
   // READ FUNCTIONS
+  Future<DocumentSnapshot<Map<String, dynamic>>> getDocument(
+    String collection,
+    String documentId,
+  ) async {
+    try {
+      return await _fireStore.collection(collection).doc(documentId).get();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting document: $e');
+      }
+      rethrow;
+    }
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getCollection(
+    String collection,
+  ) async {
+    try {
+      return await _fireStore.collection(collection).get();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting collection: $e');
+      }
+      rethrow;
+    }
+  }
 
   // UPDATE FUNCTIONS
 
