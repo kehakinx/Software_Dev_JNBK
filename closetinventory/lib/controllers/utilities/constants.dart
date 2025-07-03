@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CONSTANTS {
   // COMMON APP VALUES
@@ -84,6 +87,7 @@ class CONSTANTS {
   static const String viewWearLogTextEn = 'View Wear Log';
   static const String viewDeclutterTextEn = 'View Declutter';
   static const String dashboardClosetTextEn = 'My Closet Dashboard';
+  static const String dashboardDigitalClosetTextEn = 'My Digital Closet';
   // SPANISH
   static const String welcomeTextEs = 'Bienvenido a Closet Inventory';
   static const String loginTextEs = 'Iniciar sesión';
@@ -103,6 +107,7 @@ class CONSTANTS {
   static const String viewWearLogTextEs = 'Ver registro de uso';
   static const String viewDeclutterTextEs = 'Ver decluttering';
   static const String dashboardClosetTextEs = 'Mi panel de control del armario';
+  static const String dashboardDigitalClosetTextEs = 'Mi armario digital';
 
   // COMMON APP LANGUAGE CODES
   static const String enLanguageCode = 'En';
@@ -141,4 +146,18 @@ class CONSTANTS {
   static const String themePreferenceKey = 'theme_preference';
   static const String languagePreferenceKey = 'language_preference';
   static const String isOnboarded = 'is_onboarded';
+
+  // MOCK DATA
+  static const List<Map<String, dynamic>> mockClosetItems = [
+    {'id': '1', 'name': 'Blue Jeans', 'summary': 'Bottoms', 'timesWorn': 10},
+    {'id': '2', 'name': 'White T-Shirt', 'summary': 'Tops', 'timesWorn': 0},
+    {
+      'id': '3',
+      'name': 'Black Sneakers',
+      'summary': 'Footwear',
+      'timesWorn': 8,
+    },
+    {'id': '4', 'name': 'Red Dress', 'summary': 'Dresses', 'timesWorn': 5},
+    {'id': '5', 'name': 'Grey Hoodie', 'summary': 'Outerwear', 'timesWorn': 12},
+  ];
 }

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:closetinventory/controllers/navigation/customscroll_behavior.dart';
 import 'package:closetinventory/controllers/navigation/page_router.dart';
 import 'package:closetinventory/controllers/utilities/theme_provider.dart';
 import 'package:closetinventory/firebase_options.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
       theme: themeProvider.lightTheme,
       darkTheme: themeProvider.darkTheme,
       routerConfig: router,
+      scrollBehavior: CustomscrollBehavior(),
     );
   }
 }

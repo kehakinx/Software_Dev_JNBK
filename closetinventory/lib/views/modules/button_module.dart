@@ -11,7 +11,7 @@ class CustomButtonModule extends StatelessWidget {
   final double ratio;
 
   const CustomButtonModule({
-    Key? key,
+    super.key,
     this.icon,
     required this.title,
     required this.color,
@@ -19,7 +19,7 @@ class CustomButtonModule extends StatelessWidget {
     this.height = 50,
     this.width = 200,
     this.ratio = 1,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
