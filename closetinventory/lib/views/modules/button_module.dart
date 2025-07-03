@@ -6,6 +6,9 @@ class CustomButtonModule extends StatelessWidget {
   final String title;
   final Color color;
   final String link;
+  final double height;
+  final double width;
+  final double ratio;
 
   const CustomButtonModule({
     Key? key,
@@ -13,23 +16,32 @@ class CustomButtonModule extends StatelessWidget {
     required this.title,
     required this.color,
     required this.link,
+    this.height = 50,
+    this.width = 200,
+    this.ratio = 1,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      icon: icon != null
-          ? Icon(icon, color: Colors.white)
-          : const SizedBox.shrink(),
-      label: Text(title, style: const TextStyle(color: Colors.white)),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    return Container(
+      margin: const EdgeInsets.all(8),
+      height: height * ratio,
+      width: width * ratio,
+      child: ElevatedButton.icon(
+        icon: icon != null
+            ? Icon(icon, color: Colors.white)
+            : const SizedBox.shrink(),
+        label: Text(title, style: const TextStyle(color: Colors.white)),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          minimumSize: Size(width * ratio, height * ratio),
+        ),
+        onPressed: () {
+          context.pushNamed(link);
+        },
       ),
-      onPressed: () {
-        context.pushNamed(link);
-      },
     );
   }
 }

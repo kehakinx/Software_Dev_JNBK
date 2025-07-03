@@ -7,6 +7,9 @@ class DashCard extends StatelessWidget {
   final int number;
   final Color color;
   final String link;
+  final double height;
+  final double width;
+  final double ratio;
   final void Function(BuildContext context, String link)? onTap;
 
   const DashCard({
@@ -16,6 +19,9 @@ class DashCard extends StatelessWidget {
     required this.number,
     required this.color,
     required this.link,
+    this.height = 150,
+    this.width = 250,
+    this.ratio = 1,
     this.onTap,
   });
 
@@ -30,8 +36,8 @@ class DashCard extends StatelessWidget {
         }
       },
       child: Container(
-        height: 150,
-        width: 250,
+        height: height * ratio,
+        width: width * ratio,
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -40,6 +46,14 @@ class DashCard extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.3),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+              spreadRadius: 2,
+            ),
+          ],
         ),
         padding: const EdgeInsets.all(20),
         child: Row(
@@ -52,26 +66,26 @@ class DashCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: 18 * ratio,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     number.toString(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
-                      fontSize: 28,
+                      fontSize: 28 * ratio,
                     ),
                   ),
                 ],
               ),
             ),
             // Icon
-            Icon(icon, size: 48, color: Colors.grey.shade300),
+            Icon(icon, size: 48 * ratio, color: Colors.grey.shade300),
           ],
         ),
       ),
