@@ -190,7 +190,9 @@ class _HomePageState extends State<HomePage> {
               height: 300,
               child: PageView.builder(
                 padEnds: false,
-                controller: PageController(viewportFraction: .33),
+                controller: PageController(
+                  viewportFraction: _platformService.isWeb ? .20 : .50,
+                ),
                 itemCount: CONSTANTS
                     .mockClosetItems
                     .length, // Replace with your item count
@@ -206,6 +208,12 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
+            ),
+            const SizedBox(height: 16),
+            CustomButtonModule(
+              title: 'View All Items',
+              color: CONSTANTS.disabledButtonColor,
+              link: CONSTANTS.addOutfitPage,
             ),
           ],
         ),

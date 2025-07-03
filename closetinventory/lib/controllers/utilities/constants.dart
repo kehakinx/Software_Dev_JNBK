@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -159,5 +157,20 @@ class CONSTANTS {
     },
     {'id': '4', 'name': 'Red Dress', 'summary': 'Dresses', 'timesWorn': 5},
     {'id': '5', 'name': 'Grey Hoodie', 'summary': 'Outerwear', 'timesWorn': 12},
+    {
+      'id': '6',
+      'name': 'Green Scarf',
+      'summary': 'Accessories',
+      'timesWorn': 3,
+    },
+    {'id': '7', 'name': 'Brown Belt', 'summary': 'Accessories', 'timesWorn': 7},
+    {
+      'id': '8',
+      'name': 'Yellow Raincoat',
+      'summary': 'Outerwear',
+      'timesWorn': 2,
+    },
+    {'id': '9', 'name': 'Blue Cap', 'summary': 'Accessories', 'timesWorn': 4},
+    {'id': '10', 'name': 'White Socks', 'summary': 'Footwear', 'timesWorn': 15},
   ];
 }

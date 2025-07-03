@@ -11,7 +11,6 @@ class CustomscrollBehavior extends MaterialScrollBehavior {
     };
   }
 
-  @override
   Widget buildViewportChrome(
     BuildContext context,
     Widget child,

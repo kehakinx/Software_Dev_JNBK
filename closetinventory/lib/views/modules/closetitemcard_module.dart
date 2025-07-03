@@ -34,7 +34,7 @@ class ClosetItemCard extends StatelessWidget {
         side: BorderSide(color: borderColor, width: 2),
       ),
       shadowColor: Colors.black45,
-      child: Container(
+      child: SizedBox(
         height: 300,
         width: 180,
         child: Column(
