@@ -83,6 +83,7 @@ class CONSTANTS {
   static const String viewAnalysisTextEn = 'View Analysis';
   static const String viewWearLogTextEn = 'View Wear Log';
   static const String viewDeclutterTextEn = 'View Declutter';
+  static const String dashboardClosetTextEn = 'My Closet Dashboard';
   // SPANISH
   static const String welcomeTextEs = 'Bienvenido a Closet Inventory';
   static const String loginTextEs = 'Iniciar sesión';
@@ -101,6 +102,7 @@ class CONSTANTS {
   static const String viewAnalysisTextEs = 'Ver análisis';
   static const String viewWearLogTextEs = 'Ver registro de uso';
   static const String viewDeclutterTextEs = 'Ver decluttering';
+  static const String dashboardClosetTextEs = 'Mi panel de control del armario';
 
   // COMMON APP LANGUAGE CODES
   static const String enLanguageCode = 'En';
@@ -129,7 +131,7 @@ class CONSTANTS {
   static const Color disabledButtonColor = Color(0xFFBDBDBD);
   static const Color errorColor = Color(0xFFB00020); // Red
   static const Color successColor = Color(0xFF4CAF50); // Green
-  static const Color warningColor = Color(0xFFFFC107); // Amber
+  static const Color warningColor = Color.fromRGBO(233, 139, 8, 0.79); // Amber
   static const Color infoColor = Color(0xFF2196F3); // Blue
   static const Color primaryTextColor = Color(0xFF000000); // Black
   static const Color secondaryTextColor = Color(0xFF757575); // Grey

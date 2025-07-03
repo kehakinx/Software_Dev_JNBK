@@ -27,15 +27,16 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _isSignedIn() async {
-    if (_firebaseAuth.isUserLoggedIn()) {
+    /*if (_firebaseAuth.isUserLoggedIn()) {
       if (MyPreferences.getHasOnboarded()) {
-        context.goNamed(CONSTANTS.homePage);
-      } else {
+        */
+    context.goNamed(CONSTANTS.homePage);
+    /* } else {
         context.goNamed(CONSTANTS.onboardingPage);
       }
     } else {
       context.goNamed(CONSTANTS.loginPage);
-    }
+    }*/
   }
 
   @override

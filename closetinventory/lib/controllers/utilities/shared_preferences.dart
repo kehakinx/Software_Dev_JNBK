@@ -46,7 +46,7 @@ class MyPreferences {
   }
 
   // DELETE FUNCTIONS
-  static clearAllPrefs() {
+  static void clearAllPrefs() {
     clearAll();
   }
 

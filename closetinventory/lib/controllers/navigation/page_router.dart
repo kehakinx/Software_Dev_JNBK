@@ -1,4 +1,5 @@
 import 'package:closetinventory/views/authentication/login_page.dart';
+import 'package:closetinventory/views/home_page.dart';
 import 'package:closetinventory/views/splash_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
@@ -18,6 +19,12 @@ final GoRouter router = GoRouter(
       path: CONSTANTS.loginPage,
       pageBuilder: (context, state) =>
           NoTransitionPage<void>(key: state.pageKey, child: const LoginPage()),
+    ),
+    GoRoute(
+      name: CONSTANTS.homePage,
+      path: CONSTANTS.homePage,
+      pageBuilder: (context, state) =>
+          NoTransitionPage<void>(key: state.pageKey, child: const HomePage()),
     ),
   ],
 );

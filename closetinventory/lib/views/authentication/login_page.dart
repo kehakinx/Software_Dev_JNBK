@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();

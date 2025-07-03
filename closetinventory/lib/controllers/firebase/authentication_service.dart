@@ -13,6 +13,10 @@ class FirebaseAuthServices {
     return _dataServices;
   }
 
+  Future<void> signOut() async {
+    await _auth.signOut();
+  }
+
   bool isUserLoggedIn() {
     User? user = _auth.currentUser;
     if (user == null) {
