@@ -25,7 +25,7 @@ class _ResponsiveWrapState extends State<ResponsiveWrap> {
           spacing: widget.spacing,
           runSpacing: widget.runSpacing,
           runAlignment: WrapAlignment.center,
-          alignment: WrapAlignment.center,
+          alignment: WrapAlignment.start,
           crossAxisAlignment: WrapCrossAlignment.start,
           direction: Axis.horizontal,
           children: widget.children,

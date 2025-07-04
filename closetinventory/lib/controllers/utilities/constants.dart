@@ -1,3 +1,4 @@
+import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -26,6 +27,7 @@ class CONSTANTS {
   static const String addWearLogPage = '/addWearLog';
 
   static const String viewItemPage = '/viewItem';
+  static const String viewallItemsPage = '/viewallItems';
   static const String viewOutfitPage = '/viewOutfit';
   static const String viewLocationPage = '/viewLocation';
   static const String viewWishListPage = '/viewWishList';
@@ -146,31 +148,86 @@ class CONSTANTS {
   static const String isOnboarded = 'is_onboarded';
 
   // MOCK DATA
-  static const List<Map<String, dynamic>> mockClosetItems = [
-    {'id': '1', 'name': 'Blue Jeans', 'summary': 'Bottoms', 'timesWorn': 10},
-    {'id': '2', 'name': 'White T-Shirt', 'summary': 'Tops', 'timesWorn': 0},
-    {
-      'id': '3',
+  static const List<String> categories = [
+    'Tops',
+    'Bottoms',
+    'Dresses',
+    'Outerwear',
+    'Shoes',
+    'Accessories',
+    'Other',
+  ];
+    
+  static List<Item> mockClosetItems = [
+    Item.fromJson({
+      'itemId': '1',
+      'userId': 'user123',
+      'name': 'Blue Jeans',
+      'type': 'Bottoms',
+      'wearCount': 10,
+    }),
+    Item.fromJson({
+      'itemId': '2',
+      'userId': 'user123',
+      'name': 'White T-Shirt',
+      'type': 'Tops',
+      'wearCount': 0,
+    }),
+    Item.fromJson({
+      'itemId': '3',
+      'userId': 'user123',
       'name': 'Black Sneakers',
-      'summary': 'Footwear',
-      'timesWorn': 8,
-    },
-    {'id': '4', 'name': 'Red Dress', 'summary': 'Dresses', 'timesWorn': 5},
-    {'id': '5', 'name': 'Grey Hoodie', 'summary': 'Outerwear', 'timesWorn': 12},
-    {
-      'id': '6',
+      'type': 'Shoes',
+      'wearCount': 8,
+    }),
+    Item.fromJson({
+      'itemId': '4',
+      'userId': 'user123',
+      'name': 'Red Dress',
+      'type': 'Dresses',
+      'wearCount': 5,
+    }),
+    Item.fromJson({
+      'itemId': '5',
+      'userId': 'user123',
+      'name': 'Grey Hoodie',
+      'type': 'Outerwear',
+      'wearCount': 12,
+    }),
+    Item.fromJson({
+      'itemId': '6',
+      'userId': 'user123',
       'name': 'Green Scarf',
-      'summary': 'Accessories',
-      'timesWorn': 3,
-    },
-    {'id': '7', 'name': 'Brown Belt', 'summary': 'Accessories', 'timesWorn': 7},
-    {
-      'id': '8',
+      'type': 'Accessories',
+      'wearCount': 3,
+    }),
+    Item.fromJson({
+      'itemId': '7',
+      'userId': 'user123',
+      'name': 'Brown Belt',
+      'type': 'Accessories',
+      'wearCount': 7,
+    }),
+    Item.fromJson({
+      'itemId': '8',
+      'userId': 'user123',
       'name': 'Yellow Raincoat',
-      'summary': 'Outerwear',
-      'timesWorn': 2,
-    },
-    {'id': '9', 'name': 'Blue Cap', 'summary': 'Accessories', 'timesWorn': 4},
-    {'id': '10', 'name': 'White Socks', 'summary': 'Footwear', 'timesWorn': 15},
+      'type': 'Outerwear',
+      'wearCount': 2,
+    }),
+    Item.fromJson({
+      'itemId': '9',
+      'userId': 'user123',
+      'name': 'Blue Cap',
+      'type': 'Accessories',
+      'wearCount': 4,
+    }),
+    Item.fromJson({
+      'itemId': '10',
+      'userId': 'user123',
+      'name': 'White Socks',
+      'type': 'Shoes',
+      'wearCount': 15,
+    }),
   ];
 }

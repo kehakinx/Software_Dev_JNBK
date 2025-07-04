@@ -1,6 +1,7 @@
 import 'package:closetinventory/controllers/firebase/authentication_service.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 import 'package:closetinventory/controllers/utilities/platform_service.dart';
+import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:closetinventory/views/modules/button_module.dart';
 import 'package:closetinventory/views/modules/dashcard_module.dart';
 import 'package:closetinventory/views/modules/closetitemcard_module.dart';
@@ -129,9 +130,7 @@ class _HomePageState extends State<HomePage> {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: ClosetItemCard(
-                            name: item.entries.elementAt(1).value,
-                            summary: item.entries.elementAt(2).value,
-                            timesWorn: item.entries.elementAt(3).value,
+                            closetItem : item, 
                           ),
                         );
                       },
@@ -143,7 +142,7 @@ class _HomePageState extends State<HomePage> {
               CustomButtonModule(
                 title: 'View All Items',
                 color: CONSTANTS.disabledButtonColor,
-                link: CONSTANTS.addOutfitPage,
+                link: CONSTANTS.viewallItemsPage,
               ),
             ],
           )

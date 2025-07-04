@@ -1,27 +1,22 @@
+import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:flutter/material.dart';
 
 class ClosetItemCard extends StatelessWidget {
-  final String name;
-  final String? imageUrl;
-  final String summary;
-  final int timesWorn;
-  final bool isPlannedForDonation;
+  final Item closetItem;
+  final double ratio;
 
   const ClosetItemCard({
     super.key,
-    required this.name,
-    this.imageUrl,
-    required this.summary,
-    required this.timesWorn,
-    this.isPlannedForDonation = false,
+    required this.closetItem,
+    this.ratio = 1.0,
   });
 
   @override
   Widget build(BuildContext context) {
     Color borderColor;
-    if (timesWorn == 0) {
+    if (closetItem.wearCount == 0) {
       borderColor = Colors.red;
-    } else if (isPlannedForDonation) {
+    } else if (closetItem.isPlannedForDonation) {
       borderColor = Colors.orange;
     } else {
       borderColor = Colors.transparent;
@@ -35,8 +30,8 @@ class ClosetItemCard extends StatelessWidget {
       ),
       shadowColor: Colors.black45,
       child: SizedBox(
-        height: 300,
-        width: 180,
+        height: 300 * ratio,
+        width: 180 * ratio,
         child: Column(
           children: [
             Expanded(
@@ -48,17 +43,17 @@ class ClosetItemCard extends StatelessWidget {
                     top: Radius.circular(16),
                   ),
                   color: Colors.grey[200],
-                  image: imageUrl != null
+                  image: closetItem.photoUrls!.isNotEmpty  
                       ? DecorationImage(
-                          image: NetworkImage(imageUrl!),
+                          image: NetworkImage(closetItem.photoUrls![0]),
                           fit: BoxFit.cover,
                         )
                       : null,
                 ),
                 alignment: Alignment.center,
-                child: imageUrl == null
+                child: closetItem.photoUrls!.isEmpty
                     ? Text(
-                        name,
+                        closetItem.name,
                         style: const TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -77,14 +72,14 @@ class ClosetItemCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      summary,
+                      closetItem.summary,
                       style: const TextStyle(fontSize: 14),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Worn: $timesWorn times',
+                      'Worn: ${closetItem.wearCount} times',
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
