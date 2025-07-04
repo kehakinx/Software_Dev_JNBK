@@ -69,9 +69,9 @@ class _HomePageState extends State<HomePage> {
                   DashCard(
                     title: "Total Items",
                     icon: Icons.checkroom,
-                    number: 215,
+                    number: CONSTANTS.mockClosetItems.length,
                     color: CONSTANTS.primaryButtonColor,
-                    link: CONSTANTS.splashPage,
+                    link: CONSTANTS.viewallItemsPage,
                     ratio: _platformService.isWeb ? 1 : .7,
                   ),
                   DashCard(

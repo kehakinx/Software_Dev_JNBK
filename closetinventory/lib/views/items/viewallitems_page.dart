@@ -29,7 +29,7 @@ class _ViewallitemsPageState extends State<ViewallitemsPage> {
             children:  List.generate(
               CONSTANTS.mockClosetItems.length,
               (index) => ClosetItemCard( closetItem: CONSTANTS.mockClosetItems.elementAt(index),
-                ratio: _platformService.isWeb ? 1 : .8,
+                ratio: _platformService.isWeb ? 1 : .85,
               ),
             ),
           ),

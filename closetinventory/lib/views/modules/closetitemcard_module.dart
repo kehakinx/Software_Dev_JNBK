@@ -54,8 +54,8 @@ class ClosetItemCard extends StatelessWidget {
                 child: closetItem.photoUrls!.isEmpty
                     ? Text(
                         closetItem.name,
-                        style: const TextStyle(
-                          fontSize: 22,
+                        style: TextStyle(
+                          fontSize: 22 * ratio,
                           fontWeight: FontWeight.bold,
                         ),
                         textAlign: TextAlign.center,
@@ -66,22 +66,22 @@ class ClosetItemCard extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: EdgeInsets.all(12.0 * ratio),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       closetItem.summary,
-                      style: const TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 14 * ratio),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8 * ratio),
                     Text(
                       'Worn: ${closetItem.wearCount} times',
-                      style: const TextStyle(
-                        fontSize: 13,
+                      style: TextStyle(
+                        fontSize: 13 * ratio,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
