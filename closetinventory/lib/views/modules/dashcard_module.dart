@@ -20,7 +20,7 @@ class DashCard extends StatelessWidget {
     required this.color,
     required this.link,
     this.height = 135,
-    this.width = 250,
+    this.width = 235,
     this.ratio = 1,
     this.onTap,
   });
