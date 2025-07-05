@@ -1,4 +1,6 @@
 import 'package:closetinventory/models/item_dataobj.dart';
+import 'package:closetinventory/models/outfit_dataobj.dart';
+import 'package:closetinventory/models/user_dataobj.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -161,6 +163,33 @@ class CONSTANTS {
     'Accessories',
     'Other',
   ];
+
+  static List<USER> mockUsers = [
+    USER.fromJson({
+      'userId': 'user123',
+      'email': 'john.doe@example.com',
+      'displayName': 'John Doe',
+      'profilePic': '',
+      }),
+        USER.fromJson({
+      'userId': 'user456',
+      'email': 'jane.doe@example.com',
+      'displayName': 'Jane Doe',
+      'profilePic': '',
+        }),
+        USER.fromJson({
+      'userId': 'user789',
+      'email': 'alex.smith@example.com',
+      'displayName': 'Alex Smith',
+      'profilePic': '',
+        }),
+        USER.fromJson({
+      'userId': 'user321',
+      'email': 'maria.garcia@example.com',
+      'displayName': 'Maria Garcia',
+      'profilePic': '',
+        }),
+  ];
     
   static List<Item> mockClosetItems = [
     Item.fromJson({
@@ -232,6 +261,222 @@ class CONSTANTS {
       'name': 'White Socks',
       'type': 'Shoes',
       'wearCount': 15,
+    }),
+    // Items for user456 (Jane Doe)
+    Item.fromJson({
+      'itemId': '11',
+      'userId': 'user456',
+      'name': 'Pink Blouse',
+      'type': 'Tops',
+      'wearCount': 6,
+    }),
+    Item.fromJson({
+      'itemId': '12',
+      'userId': 'user456',
+      'name': 'Black Skirt',
+      'type': 'Bottoms',
+      'wearCount': 4,
+    }),
+    Item.fromJson({
+      'itemId': '13',
+      'userId': 'user456',
+      'name': 'White Heels',
+      'type': 'Shoes',
+      'wearCount': 2,
+    }),
+    Item.fromJson({
+      'itemId': '14',
+      'userId': 'user456',
+      'name': 'Beige Trench Coat',
+      'type': 'Outerwear',
+      'wearCount': 3,
+    }),
+    Item.fromJson({
+      'itemId': '15',
+      'userId': 'user456',
+      'name': 'Gold Necklace',
+      'type': 'Accessories',
+      'wearCount': 7,
+    }),
+    // Items for user789 (Alex Smith)
+    Item.fromJson({
+      'itemId': '16',
+      'userId': 'user789',
+      'name': 'Grey Suit Jacket',
+      'type': 'Outerwear',
+      'wearCount': 5,
+    }),
+    Item.fromJson({
+      'itemId': '26',
+      'userId': 'user789',
+      'name': 'White Pocket Square',
+      'type': 'Accessories',
+      'wearCount': 3,
+    }),
+    Item.fromJson({
+      'itemId': '27',
+      'userId': 'user789',
+      'name': 'Navy Blue Tie',
+      'type': 'Accessories',
+      'wearCount': 6,
+      'isPlannedForDonation': true,
+    }),
+    Item.fromJson({
+      'itemId': '28',
+      'userId': 'user789',
+      'name': 'Black Leather Belt',
+      'type': 'Accessories',
+      'wearCount': 7,
+    }),
+    Item.fromJson({
+      'itemId': '17',
+      'userId': 'user789',
+      'name': 'Blue Dress Shirt',
+      'type': 'Tops',
+      'wearCount': 8,
+    }),
+    Item.fromJson({
+      'itemId': '18',
+      'userId': 'user789',
+      'name': 'Black Dress Pants',
+      'type': 'Bottoms',
+      'wearCount': 6,
+    }),
+    Item.fromJson({
+      'itemId': '19',
+      'userId': 'user789',
+      'name': 'Brown Loafers',
+      'type': 'Shoes',
+      'wearCount': 4,
+    }),
+    Item.fromJson({
+      'itemId': '20',
+      'userId': 'user789',
+      'name': 'Silver Watch',
+      'type': 'Accessories',
+      'wearCount': 9,
+    }),
+    // Items for user321 (Maria Garcia)
+    Item.fromJson({
+      'itemId': '21',
+      'userId': 'user321',
+      'name': 'Red Cardigan',
+      'type': 'Outerwear',
+      'wearCount': 7,
+    }),
+    Item.fromJson({
+      'itemId': '22',
+      'userId': 'user321',
+      'name': 'Floral Dress',
+      'type': 'Dresses',
+      'wearCount': 5,
+    }),
+    Item.fromJson({
+      'itemId': '23',
+      'userId': 'user321',
+      'name': 'White Sandals',
+      'type': 'Shoes',
+      'wearCount': 3,
+    }),
+    Item.fromJson({
+      'itemId': '24',
+      'userId': 'user321',
+      'name': 'Blue Denim Jacket',
+      'type': 'Outerwear',
+      'wearCount': 6,
+    }),
+    Item.fromJson({
+      'itemId': '25',
+      'userId': 'user321',
+      'name': 'Pearl Earrings',
+      'type': 'Accessories',
+      'wearCount': 8,
+    }),
+  ];
+
+  static List<Outfit> mockOutfits = [
+    Outfit.fromJson({
+      'outfitId': '1',
+      'userId': 'user123',
+      'name': 'Casual Look',
+      'itemIds': ['1', '2', '3'],
+      'stylingNotes': 'Perfect for a casual day out.',
+      'wareCount': 5,
+    }),
+    Outfit.fromJson({
+      'outfitId': '2',
+      'userId': 'user123',
+      'name': 'Office Attire',
+      'itemIds': ['4', '5', '6'],
+      'stylingNotes': 'Professional and stylish.',
+      'wareCount': 3,
+    }),
+    Outfit.fromJson({
+      'outfitId': '3',
+      'userId': 'user123',
+      'name': 'Rainy Day',
+      'itemIds': ['8', '9', '10'],
+      'stylingNotes': 'Stay dry and comfortable.',
+      'wareCount': 2,
+    }),
+    Outfit.fromJson({
+      'outfitId': '4',
+      'userId': 'user123',
+      'name': 'Weekend Vibes',
+      'itemIds': ['2', '7', '3'],
+      'stylingNotes': 'Relaxed and easy-going.',
+      'wareCount': 4,
+    }),
+    // Outfits for user456 (Jane Doe)
+    Outfit.fromJson({
+      'outfitId': '5',
+      'userId': 'user456',
+      'name': 'Elegant Evening',
+      'itemIds': ['11', '12', '13'],
+      'stylingNotes': 'Perfect for a night out.',
+      'wareCount': 2,
+    }),
+    Outfit.fromJson({
+      'outfitId': '6',
+      'userId': 'user456',
+      'name': 'Chic Workday',
+      'itemIds': ['11', '14', '15'],
+      'stylingNotes': 'Stylish and professional.',
+      'wareCount': 3,
+    }),
+    // Outfits for user789 (Alex Smith)
+    Outfit.fromJson({
+      'outfitId': '7',
+      'userId': 'user789',
+      'name': 'Business Formal',
+      'itemIds': ['16', '17', '18', '20'],
+      'stylingNotes': 'For important meetings.',
+      'wareCount': 4,
+    }),
+    Outfit.fromJson({
+      'outfitId': '8',
+      'userId': 'user789',
+      'name': 'Smart Casual',
+      'itemIds': ['17', '18', '19'],
+      'stylingNotes': 'Comfortable yet sharp.',
+      'wareCount': 2,
+    }),
+    // Outfits for user321 (Maria Garcia)
+    Outfit.fromJson({
+      'outfitId': '9',
+      'userId': 'user321',
+      'name': 'Spring Day',
+      'itemIds': ['21', '22', '23'],
+      'stylingNotes': 'Light and colorful.',
+      'wareCount': 3,
+    }),
+    Outfit.fromJson({
+      'outfitId': '10',
+      'userId': 'user321',
+      'name': 'Denim Style',
+      'itemIds': ['24', '25', '23'],
+      'stylingNotes': 'Trendy and casual.',
+      'wareCount': 1,
     }),
   ];
 }

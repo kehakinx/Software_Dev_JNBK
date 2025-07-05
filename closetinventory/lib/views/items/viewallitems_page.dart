@@ -1,4 +1,6 @@
+import 'package:closetinventory/controllers/utilities/shared_preferences.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
+import 'package:closetinventory/models/user_dataobj.dart';
 import 'package:closetinventory/views/modules/closetitemcard_module.dart';
 import 'package:closetinventory/views/modules/responsivewrap_module.dart';
 import 'package:flutter/material.dart';
@@ -21,14 +23,17 @@ class ViewallitemsPage extends StatefulWidget {
 
 class _ViewallitemsPageState extends State<ViewallitemsPage> {
   final PlatformService _platformService = PlatformService.instance;
+  MyPreferences _myPreferences = MyPreferences();
   late List<Item> _closetItems;
+  late USER _user;
 
   @override
   void initState() {
     super.initState();
 
     // Always create a new instance (copy) of the mockClosetItems list
-    _closetItems = List<Item>.from(CONSTANTS.mockClosetItems);
+    _user = CONSTANTS.mockUsers.firstWhere((user) => user.userId == MyPreferences.getString('prefUserKey'));
+    _closetItems = List<Item>.from(CONSTANTS.mockClosetItems.where((item) => item.userId == _user.userId));
     
     if (widget.unworn) {
       _closetItems.retainWhere((item) => item.wearCount == 0);

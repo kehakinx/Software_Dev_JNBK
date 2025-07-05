@@ -5,7 +5,7 @@ class USER {
   final String email;
   final String displayName;
   final String? profileImageUrl;
-  final Map<String, dynamic> preference;
+  final Map<String, dynamic>? preference;
   final Timestamp createdDate;
 
   USER({
@@ -13,7 +13,7 @@ class USER {
     required this.email,
     required this.displayName,
     this.profileImageUrl,
-    required this.preference,
+    this.preference,
     Timestamp? createdDate,
   }) : createdDate = createdDate ?? Timestamp.now();
 
@@ -23,8 +23,10 @@ class USER {
       email: json['email'] as String,
       displayName: json['displayName'] as String,
       profileImageUrl: json['profileImageUrl'] as String?,
-      preference: Map<String, dynamic>.from(json['preference'] as Map),
-      createdDate: json['createdDate'] as Timestamp,
+      preference: Map<String, dynamic>.from(
+        json['preference'] ?? {},
+      ),
+      createdDate: json['createdDate'] as Timestamp? ?? Timestamp.now(),
     );
   }
 

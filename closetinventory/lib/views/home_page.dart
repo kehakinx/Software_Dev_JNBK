@@ -1,7 +1,9 @@
 import 'package:closetinventory/controllers/firebase/authentication_service.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 import 'package:closetinventory/controllers/utilities/platform_service.dart';
+import 'package:closetinventory/controllers/utilities/shared_preferences.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
+import 'package:closetinventory/models/user_dataobj.dart';
 import 'package:closetinventory/views/modules/button_module.dart';
 import 'package:closetinventory/views/modules/dashcard_module.dart';
 import 'package:closetinventory/views/modules/closetitemcard_module.dart';
@@ -17,14 +19,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final FirebaseAuthServices _firebaseAuth = FirebaseAuthServices();
+  MyPreferences _myPreferences = MyPreferences();
   final PlatformService _platformService = PlatformService.instance;
   late final List<Item> _closetItems;
+  late USER _user;
 
    @override
   void initState() {
     super.initState();
 
-    _closetItems = List<Item>.from(CONSTANTS.mockClosetItems);
+    _user = CONSTANTS.mockUsers.firstWhere((user) => user.userId == MyPreferences.getString('prefUserKey'));
+    _closetItems = List<Item>.from(CONSTANTS.mockClosetItems.where((item) => item.userId == _user.userId));
   }
 
 
