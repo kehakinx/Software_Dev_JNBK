@@ -4,13 +4,13 @@ import 'package:closetinventory/views/home_page.dart';
 import 'package:closetinventory/views/items/addnewitem_page.dart';
 import 'package:closetinventory/views/items/edititem_page.dart';
 import 'package:closetinventory/views/items/viewallitems_page.dart';
+import 'package:closetinventory/views/outfits/addnewoutfit_page.dart';
 import 'package:closetinventory/views/splash_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 
 final GoRouter router = GoRouter(
-  initialLocation:
-      CONSTANTS.splashPage, // Use the constant from DirectoryRouter
+  initialLocation: CONSTANTS.splashPage,
   routes: [
     GoRoute(
       name: CONSTANTS.splashPage,
@@ -35,6 +35,12 @@ final GoRouter router = GoRouter(
       path: CONSTANTS.addItemPage,
       pageBuilder: (context, state) =>
           NoTransitionPage<void>(key: state.pageKey, child: const AddNewItemPage()),
+    ),
+    GoRoute(
+      name: CONSTANTS.addOutfitPage,
+      path: CONSTANTS.addOutfitPage,
+      pageBuilder: (context, state) =>
+          NoTransitionPage<void>(key: state.pageKey, child: const AddNewOutfitPage()),
     ),
     GoRoute(
       name: CONSTANTS.viewallItemsPage,
