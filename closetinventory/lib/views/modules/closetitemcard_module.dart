@@ -1,4 +1,5 @@
 import 'package:closetinventory/controllers/utilities/constants.dart';
+import 'package:closetinventory/controllers/utilities/platform_service.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +19,7 @@ class ClosetItemCard extends StatefulWidget {
 }
 
 class _ClosetItemCardState extends State<ClosetItemCard> {
+  final PlatformService _platformService = PlatformService.instance;
   
   @override
   Widget build(BuildContext context) {
@@ -54,24 +56,29 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
                       top: Radius.circular(16),
                     ),
                     color: Colors.grey[200],
-                    image: widget.closetItem.photoUrls!.isNotEmpty
-                        ? DecorationImage(
-                            image: NetworkImage(widget.closetItem.photoUrls![0]),
-                            fit: BoxFit.cover,
-                          )
-                        : null,
                   ),
                   alignment: Alignment.center,
-                  child: widget.closetItem.photoUrls!.isEmpty
-                      ? Text(
+                  child: widget.closetItem.photoUrls!.isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(16),
+                          ),
+                          child: Image.network(
+                            widget.closetItem.photoUrls!.first,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                            errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, size: 48 * widget.ratio),
+                          ),
+                        )
+                      : Text(
                           widget.closetItem.name,
                           style: TextStyle(
                             fontSize: 22 * widget.ratio,
                             fontWeight: FontWeight.bold,
                           ),
                           textAlign: TextAlign.center,
-                        )
-                      : null,
+                        ),
                 ),
               ),
               Expanded(
@@ -82,17 +89,24 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                       Text(
+                        widget.closetItem.name,
+                        style: TextStyle(fontSize: 14 * widget.ratio,fontWeight: FontWeight.bold,),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 2 * widget.ratio),
                       Text(
                         widget.closetItem.summary,
-                        style: TextStyle(fontSize: 14 * widget.ratio),
+                        style: TextStyle(fontSize: 10 * widget.ratio),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 8 * widget.ratio),
+                      SizedBox(height: 4 * widget.ratio),
                       Text(
                         'Worn: ${widget.closetItem.wearCount} times',
                         style: TextStyle(
-                          fontSize: 13 * widget.ratio,
+                          fontSize: 10 * widget.ratio,
                           fontWeight: FontWeight.w500,
                         ),
                       ),

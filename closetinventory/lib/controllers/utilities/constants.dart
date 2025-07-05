@@ -305,6 +305,7 @@ class CONSTANTS {
       'name': 'Grey Suit Jacket',
       'type': 'Outerwear',
       'wearCount': 5,
+      'photoUrls': ['https://image.hm.com/assets/hm/23/74/23744d23f93f8522bacd4e6764ff164c14b71cfd.jpg?imwidth=820'],
     }),
     Item.fromJson({
       'itemId': '26',
@@ -312,6 +313,7 @@ class CONSTANTS {
       'name': 'White Pocket Square',
       'type': 'Accessories',
       'wearCount': 3,
+      'photoUrls': ['https://image.menswearhouse.com/is/image/TMW/TMW_88MM_19_JOSEPH_FEISS_GOLD_POCKET_SQUARES_WHITE_MAIN?imPolicy=pdp-zoom'],
     }),
     Item.fromJson({
       'itemId': '27',
@@ -320,6 +322,7 @@ class CONSTANTS {
       'type': 'Accessories',
       'wearCount': 6,
       'isPlannedForDonation': true,
+      'photoUrls': ['https://m.media-amazon.com/images/I/71LMLfed-YL._AC_SX569_.jpg'],
     }),
     Item.fromJson({
       'itemId': '28',
@@ -341,6 +344,7 @@ class CONSTANTS {
       'name': 'Black Dress Pants',
       'type': 'Bottoms',
       'wearCount': 6,
+      'photoUrls': ['https://cdn.shopify.com/s/files/1/0293/9277/files/01-16-25_S2_15_GW24K1947A_Black_P_CXB_AA_15-25-43_30692_PXF.jpg?v=1737156594&width=600&height=900&crop=center'],
     }),
     Item.fromJson({
       'itemId': '19',

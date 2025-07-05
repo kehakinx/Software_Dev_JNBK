@@ -104,6 +104,6 @@ class Item {
   }
 
   String get summary {
-    return '$name - $type - ${brand ?? 'Unknown Brand'} - ${color ?? 'No Color'}';
+    return '$type - ${brand ?? 'Unknown Brand'} - ${color ?? 'No Color'}';
   }
 }
