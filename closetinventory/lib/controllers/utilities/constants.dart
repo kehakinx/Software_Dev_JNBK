@@ -55,6 +55,8 @@ class CONSTANTS {
   static const String invalidInputErrorEn =
       'Invalid input. Please check your data.';
   static const String itemAlreadyExistsErrorEn = 'Item already exists.';
+  static const String itemNoRecordsErrorEn =
+      'No items found.';
   // SPANISH
   static const String networkErrorEs =
       'Error de red. Por favor, inténtelo de nuevo más tarde.';
@@ -66,6 +68,8 @@ class CONSTANTS {
   static const String invalidInputErrorEs =
       'Entrada inválida. Por favor, revise sus datos.';
   static const String itemAlreadyExistsErrorEs = 'El artículo ya existe.';
+  static const String itemNoRecordsErrorEs =
+      'No se encontraron artículos.';
 
   // COMMON APP STRINGS
   // ENGLISH

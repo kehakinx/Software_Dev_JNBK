@@ -7,6 +7,7 @@ class DashCard extends StatelessWidget {
   final int number;
   final Color color;
   final String link;
+  final String extra;
   final double height;
   final double width;
   final double ratio;
@@ -19,6 +20,7 @@ class DashCard extends StatelessWidget {
     required this.number,
     required this.color,
     required this.link,
+    this.extra = '',
     this.height = 135,
     this.width = 235,
     this.ratio = 1,
@@ -32,7 +34,7 @@ class DashCard extends StatelessWidget {
         if (onTap != null) {
           onTap!(context, link);
         } else {
-          context.pushNamed(link);
+          context.pushNamed(link, extra: extra);
         }
       },
       child: Container(

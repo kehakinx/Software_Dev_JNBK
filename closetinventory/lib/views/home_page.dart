@@ -1,12 +1,12 @@
 import 'package:closetinventory/controllers/firebase/authentication_service.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 import 'package:closetinventory/controllers/utilities/platform_service.dart';
+import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:closetinventory/views/modules/button_module.dart';
 import 'package:closetinventory/views/modules/dashcard_module.dart';
 import 'package:closetinventory/views/modules/closetitemcard_module.dart';
 import 'package:closetinventory/views/modules/responsivewrap_module.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,10 +18,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final FirebaseAuthServices _firebaseAuth = FirebaseAuthServices();
   final PlatformService _platformService = PlatformService.instance;
+  late final List<Item> _closetItems;
 
    @override
   void initState() {
     super.initState();
+
+    _closetItems = List<Item>.from(CONSTANTS.mockClosetItems);
   }
 
 
@@ -68,7 +71,7 @@ class _HomePageState extends State<HomePage> {
                   DashCard(
                     title: "Total Items",
                     icon: Icons.checkroom,
-                    number: CONSTANTS.mockClosetItems.length,
+                    number: _closetItems.length,
                     color: CONSTANTS.primaryButtonColor,
                     link: CONSTANTS.viewallItemsPage,
                     ratio: _platformService.isWeb ? 1 : .7,
@@ -84,17 +87,19 @@ class _HomePageState extends State<HomePage> {
                   DashCard(
                     title: "Unworn Items",
                     icon: Icons.warning_amber,
-                    number: CONSTANTS.mockClosetItems.where((context) => context.wearCount == 0).length,
+                    number: _closetItems.where((context) => context.wearCount == 0).length,
                     color: CONSTANTS.warningColor,
-                    link: CONSTANTS.homePage,
+                    link: CONSTANTS.viewallItemsPage,
+                    extra: "unWorn",
                     ratio: _platformService.isWeb ? 1 : .7,
                   ),
                   DashCard(
                     title: "To Declutter",
                     icon: Icons.delete_outline,
-                    number: CONSTANTS.mockClosetItems.where((context) => context.isPlannedForDonation == true).length,
+                    number: _closetItems.where((context) => context.isPlannedForDonation == true).length,
                     color: CONSTANTS.errorColor,
-                    link: CONSTANTS.homePage,
+                    link: CONSTANTS.viewallItemsPage,
+                    extra: "declutter",
                     ratio: _platformService.isWeb ? 1 : .7,
                   ),
                 ],
@@ -118,9 +123,9 @@ class _HomePageState extends State<HomePage> {
                     height: 300,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: CONSTANTS.mockClosetItems.length,
+                      itemCount: _closetItems.length,
                       itemBuilder: (context, index) {
-                        final item = CONSTANTS.mockClosetItems[index];
+                        final item = _closetItems[index];
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: ClosetItemCard(

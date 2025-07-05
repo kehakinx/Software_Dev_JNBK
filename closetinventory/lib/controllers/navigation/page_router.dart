@@ -40,7 +40,10 @@ final GoRouter router = GoRouter(
       name: CONSTANTS.viewallItemsPage,
       path: CONSTANTS.viewallItemsPage,
       pageBuilder: (context, state) =>
-          NoTransitionPage<void>(key: state.pageKey, child: const ViewallitemsPage()),
+          NoTransitionPage<void>(key: state.pageKey, child: ViewallitemsPage(
+            unworn: state.extra == "unWorn",
+            declutter: state.extra == "declutter",
+          )),
     ),
     GoRoute(
       name: CONSTANTS.viewItemPage,
