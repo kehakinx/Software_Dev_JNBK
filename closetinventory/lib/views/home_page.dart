@@ -20,7 +20,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final FirebaseAuthServices _firebaseAuth = FirebaseAuthServices();
-  MyPreferences _myPreferences = MyPreferences();
   final PlatformService _platformService = PlatformService.instance;
   late final List<Item> _closetItems;
   late final List<Outfit> _outfits;

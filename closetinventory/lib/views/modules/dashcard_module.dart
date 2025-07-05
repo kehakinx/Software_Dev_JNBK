@@ -43,14 +43,14 @@ class DashCard extends StatelessWidget {
         margin: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [color.withOpacity(0.65), color.withOpacity(0.85)],
+            colors: [color.withValues(alpha: 0.65), color.withValues(alpha: 0.85)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.3),
+              color: color.withValues(alpha: 0.3),
               blurRadius: 12,
               offset: const Offset(0, 6),
               spreadRadius: 2,

@@ -5,7 +5,7 @@ class Item {
   final String userId;
   final String name;
   final String type;
-  final String? brand;
+  final String brand;
   final String? size;
   final String? color;
   final String? material;
@@ -28,7 +28,7 @@ class Item {
     required this.userId,
     required this.name,
     required this.type,
-    this.brand,
+    this.brand = '',
     this.size,
     this.color,
     this.material,
@@ -55,7 +55,7 @@ class Item {
       userId: json['userId'] as String,
       name: json['name'] as String,
       type: json['type'] as String,
-      brand: json['brand'] as String?,
+      brand: json['brand'] as String? ?? '',
       size: json['size'] as String?,
       color: json['color'] as String?,
       material: json['material'] as String?,
@@ -104,6 +104,6 @@ class Item {
   }
 
   String get summary {
-    return '$type - ${brand ?? 'Unknown Brand'} - ${color ?? 'No Color'}';
+    return '$type - ${brand.isEmpty  ? 'Unknown Brand' : brand} - ${color ?? 'No Color'}';
   }
 }

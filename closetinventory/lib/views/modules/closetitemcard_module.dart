@@ -1,5 +1,4 @@
 import 'package:closetinventory/controllers/utilities/constants.dart';
-import 'package:closetinventory/controllers/utilities/platform_service.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -7,11 +6,13 @@ import 'package:go_router/go_router.dart';
 class ClosetItemCard extends StatefulWidget {
   final Item closetItem;
   final double ratio;
+  final bool shortSummary;
 
   const ClosetItemCard({
     super.key,
     required this.closetItem,
     this.ratio = 1.0,
+    this.shortSummary = false,
   });
 
   @override
@@ -19,7 +20,7 @@ class ClosetItemCard extends StatefulWidget {
 }
 
 class _ClosetItemCardState extends State<ClosetItemCard> {
-  final PlatformService _platformService = PlatformService.instance;
+  
   
   @override
   Widget build(BuildContext context) {
@@ -89,12 +90,16 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Text(
+                     Text(
                         widget.closetItem.name,
-                        style: TextStyle(fontSize: 14 * widget.ratio,fontWeight: FontWeight.bold,),
+                        style: TextStyle(
+                        fontSize: 14 * widget.ratio,
+                        fontWeight: FontWeight.bold,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
+                      if (!widget.shortSummary) ...[
                       SizedBox(height: 2 * widget.ratio),
                       Text(
                         widget.closetItem.summary,
@@ -106,10 +111,11 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
                       Text(
                         'Worn: ${widget.closetItem.wearCount} times',
                         style: TextStyle(
-                          fontSize: 10 * widget.ratio,
-                          fontWeight: FontWeight.w500,
+                        fontSize: 10 * widget.ratio,
+                        fontWeight: FontWeight.w500,
                         ),
                       ),
+                      ],
                     ],
                   ),
                 ),
