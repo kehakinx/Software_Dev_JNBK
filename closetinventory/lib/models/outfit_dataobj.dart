@@ -29,8 +29,8 @@ class Outfit {
       itemIds: List<String>.from(json['itemIds'] ?? []),
       stylingNotes: json['stylingNotes'] as String?,
       wareCount: json['warCount'] != null ? json['warCount'] as int : 0,
-      lastWornDate: json['lastWornDate'] as Timestamp?,
-      createdDate: json['createdDate'] as Timestamp,
+      lastWornDate: json['lastWornDate'] as Timestamp? ?? Timestamp.now(),
+      createdDate: json['createdDate'] as Timestamp? ?? Timestamp.now(),
     );
   }
 

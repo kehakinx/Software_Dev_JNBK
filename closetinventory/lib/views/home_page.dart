@@ -3,6 +3,7 @@ import 'package:closetinventory/controllers/utilities/constants.dart';
 import 'package:closetinventory/controllers/utilities/platform_service.dart';
 import 'package:closetinventory/controllers/utilities/shared_preferences.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
+import 'package:closetinventory/models/outfit_dataobj.dart';
 import 'package:closetinventory/models/user_dataobj.dart';
 import 'package:closetinventory/views/modules/button_module.dart';
 import 'package:closetinventory/views/modules/dashcard_module.dart';
@@ -22,6 +23,7 @@ class _HomePageState extends State<HomePage> {
   MyPreferences _myPreferences = MyPreferences();
   final PlatformService _platformService = PlatformService.instance;
   late final List<Item> _closetItems;
+  late final List<Outfit> _outfits;
   late USER _user;
 
    @override
@@ -30,6 +32,7 @@ class _HomePageState extends State<HomePage> {
 
     _user = CONSTANTS.mockUsers.firstWhere((user) => user.userId == MyPreferences.getString('prefUserKey'));
     _closetItems = List<Item>.from(CONSTANTS.mockClosetItems.where((item) => item.userId == _user.userId));
+    _outfits = List<Outfit>.from(CONSTANTS.mockOutfits.where((outfit) => outfit.userId == _user.userId));
   }
 
 
@@ -84,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                   DashCard(
                     title: "Saved Outfits",
                     icon: Icons.assignment_outlined,
-                    number: 38,
+                    number: _outfits.length,
                     color: CONSTANTS.successColor,
                     link: CONSTANTS.homePage,
                     ratio: _platformService.isWeb ? 1 : .7,
