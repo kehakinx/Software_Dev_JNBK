@@ -33,7 +33,7 @@ class _EditItemPageState extends State<EditItemPage> {
     super.initState();
     // Initialize controllers with existing item data
     _itemNameController.text = widget.closetItem.name;
-    _brandController.text = widget.closetItem.brand ?? '';
+    _brandController.text = widget.closetItem.brand;
     _colorController.text = widget.closetItem.color ?? '';
     _sizeController.text = widget.closetItem.size ?? '';
     _materialController.text = widget.closetItem.material ?? '';
