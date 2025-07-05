@@ -1,13 +1,12 @@
 import 'package:closetinventory/controllers/firebase/authentication_service.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 import 'package:closetinventory/controllers/utilities/platform_service.dart';
-import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:closetinventory/views/modules/button_module.dart';
 import 'package:closetinventory/views/modules/dashcard_module.dart';
 import 'package:closetinventory/views/modules/closetitemcard_module.dart';
 import 'package:closetinventory/views/modules/responsivewrap_module.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -85,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                   DashCard(
                     title: "Unworn Items",
                     icon: Icons.warning_amber,
-                    number: 15,
+                    number: CONSTANTS.mockClosetItems.where((context) => context.wearCount == 0).length,
                     color: CONSTANTS.warningColor,
                     link: CONSTANTS.homePage,
                     ratio: _platformService.isWeb ? 1 : .7,
@@ -93,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                   DashCard(
                     title: "To Declutter",
                     icon: Icons.delete_outline,
-                    number: 7,
+                    number: CONSTANTS.mockClosetItems.where((context) => context.isPlannedForDonation == true).length,
                     color: CONSTANTS.errorColor,
                     link: CONSTANTS.homePage,
                     ratio: _platformService.isWeb ? 1 : .7,
@@ -117,20 +116,16 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     width: double.infinity,
                     height: 300,
-                    child: PageView.builder(
-                      padEnds: false,
-                      controller: PageController(
-                        viewportFraction: _platformService.isWeb ? .20 : .50,
-                      ),
-                      itemCount: CONSTANTS
-                          .mockClosetItems
-                          .length, // Replace with your item count
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: CONSTANTS.mockClosetItems.length,
                       itemBuilder: (context, index) {
                         final item = CONSTANTS.mockClosetItems[index];
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: ClosetItemCard(
-                            closetItem : item, 
+                            closetItem: item,
+                            ratio: _platformService.isWeb ? 1 : .85,
                           ),
                         );
                       },

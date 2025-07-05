@@ -1,9 +1,15 @@
+import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:flutter/material.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 import 'package:intl/intl.dart';
 
 class EditItemPage extends StatefulWidget {
-  const EditItemPage({super.key});
+  final Item closetItem;
+
+  const EditItemPage({
+    super.key,
+    required this.closetItem,
+    });
 
   @override
   State<EditItemPage> createState() => _EditItemPageState();
@@ -21,6 +27,21 @@ class _EditItemPageState extends State<EditItemPage> {
 
   String? _selectedCategory;
   DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controllers with existing item data
+    _itemNameController.text = widget.closetItem.name;
+    _brandController.text = widget.closetItem.brand ?? '';
+    _colorController.text = widget.closetItem.color ?? '';
+    _sizeController.text = widget.closetItem.size ?? '';
+    _materialController.text = widget.closetItem.material ?? '';
+    _purchaseDateController.text = widget.closetItem.purchaseDate!.toDate().toString();
+    _priceController.text = widget.closetItem.price?.toString() ?? '';
+    _selectedCategory = widget.closetItem.type;
+    _selectedDate = widget.closetItem.purchaseDate?.toDate();
+  }
 
   @override
   void dispose() {

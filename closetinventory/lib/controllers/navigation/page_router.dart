@@ -1,6 +1,8 @@
+import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:closetinventory/views/authentication/login_page.dart';
 import 'package:closetinventory/views/home_page.dart';
 import 'package:closetinventory/views/items/addnewitem_page.dart';
+import 'package:closetinventory/views/items/edititem_page.dart';
 import 'package:closetinventory/views/items/viewallitems_page.dart';
 import 'package:closetinventory/views/splash_page.dart';
 import 'package:go_router/go_router.dart';
@@ -39,6 +41,12 @@ final GoRouter router = GoRouter(
       path: CONSTANTS.viewallItemsPage,
       pageBuilder: (context, state) =>
           NoTransitionPage<void>(key: state.pageKey, child: const ViewallitemsPage()),
+    ),
+    GoRoute(
+      name: CONSTANTS.viewItemPage,
+      path: CONSTANTS.viewItemPage,
+      pageBuilder: (context, state) =>
+          NoTransitionPage<void>(key: state.pageKey, child: EditItemPage(closetItem: state.extra as Item,)),
     ),
   ],
 );

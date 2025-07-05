@@ -1,7 +1,9 @@
+import 'package:closetinventory/controllers/utilities/constants.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class ClosetItemCard extends StatelessWidget {
+class ClosetItemCard extends StatefulWidget {
   final Item closetItem;
   final double ratio;
 
@@ -12,17 +14,26 @@ class ClosetItemCard extends StatelessWidget {
   });
 
   @override
+  State<ClosetItemCard> createState() => _ClosetItemCardState();
+}
+
+class _ClosetItemCardState extends State<ClosetItemCard> {
+  
+  @override
   Widget build(BuildContext context) {
     Color borderColor;
-    if (closetItem.wearCount == 0) {
+    if (widget.closetItem.wearCount == 0) {
       borderColor = Colors.red;
-    } else if (closetItem.isPlannedForDonation) {
+    } else if (widget.closetItem.isPlannedForDonation) {
       borderColor = Colors.orange;
     } else {
       borderColor = Colors.transparent;
     }
-
-    return Card(
+    return InkWell(
+        onTap: () {
+         context.pushNamed(CONSTANTS.viewItemPage, extra: widget.closetItem);
+        },
+        child: Card(
       elevation: 6,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -30,66 +41,67 @@ class ClosetItemCard extends StatelessWidget {
       ),
       shadowColor: Colors.black45,
       child: SizedBox(
-        height: 300 * ratio,
-        width: 180 * ratio,
-        child: Column(
-          children: [
-            Expanded(
-              flex: 2,
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
+          height: 300 * widget.ratio,
+          width: 180 * widget.ratio,
+          child: Column(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(16),
+                    ),
+                    color: Colors.grey[200],
+                    image: widget.closetItem.photoUrls!.isNotEmpty
+                        ? DecorationImage(
+                            image: NetworkImage(widget.closetItem.photoUrls![0]),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
                   ),
-                  color: Colors.grey[200],
-                  image: closetItem.photoUrls!.isNotEmpty  
-                      ? DecorationImage(
-                          image: NetworkImage(closetItem.photoUrls![0]),
-                          fit: BoxFit.cover,
+                  alignment: Alignment.center,
+                  child: widget.closetItem.photoUrls!.isEmpty
+                      ? Text(
+                          widget.closetItem.name,
+                          style: TextStyle(
+                            fontSize: 22 * widget.ratio,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
                         )
                       : null,
                 ),
-                alignment: Alignment.center,
-                child: closetItem.photoUrls!.isEmpty
-                    ? Text(
-                        closetItem.name,
-                        style: TextStyle(
-                          fontSize: 22 * ratio,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      )
-                    : null,
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: EdgeInsets.all(12.0 * ratio),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      closetItem.summary,
-                      style: TextStyle(fontSize: 14 * ratio),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 8 * ratio),
-                    Text(
-                      'Worn: ${closetItem.wearCount} times',
-                      style: TextStyle(
-                        fontSize: 13 * ratio,
-                        fontWeight: FontWeight.w500,
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: EdgeInsets.all(12.0 * widget.ratio),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.closetItem.summary,
+                        style: TextStyle(fontSize: 14 * widget.ratio),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 8 * widget.ratio),
+                      Text(
+                        'Worn: ${widget.closetItem.wearCount} times',
+                        style: TextStyle(
+                          fontSize: 13 * widget.ratio,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

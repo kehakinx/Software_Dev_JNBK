@@ -28,7 +28,15 @@ class _ResponsiveWrapState extends State<ResponsiveWrap> {
           alignment: WrapAlignment.start,
           crossAxisAlignment: WrapCrossAlignment.start,
           direction: Axis.horizontal,
-          children: widget.children,
+          children: widget.children.map((child) {
+            return GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                // Handle tap if needed, or pass through
+              },
+              child: child,
+            );
+          }).toList(),
         );
       },
     );

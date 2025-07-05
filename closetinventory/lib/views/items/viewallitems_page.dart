@@ -1,4 +1,3 @@
-import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:closetinventory/views/modules/closetitemcard_module.dart';
 import 'package:closetinventory/views/modules/responsivewrap_module.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +27,8 @@ class _ViewallitemsPageState extends State<ViewallitemsPage> {
           child: ResponsiveWrap(
             children:  List.generate(
               CONSTANTS.mockClosetItems.length,
-              (index) => ClosetItemCard( closetItem: CONSTANTS.mockClosetItems.elementAt(index),
+              (index) => ClosetItemCard( 
+                closetItem: CONSTANTS.mockClosetItems.elementAt(index),
                 ratio: _platformService.isWeb ? 1 : .85,
               ),
             ),
