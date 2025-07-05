@@ -83,7 +83,7 @@ class _EditItemPageState extends State<EditItemPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add New Clothing Item'),
+        title: Text('Edit Clothing Item'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
