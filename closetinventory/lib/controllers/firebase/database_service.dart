@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:closetinventory/models/outfit_dataobj.dart';
+import 'package:closetinventory/controllers/utilities/constants.dart';
 
 class FirebaseDataServices {
   // Add your Firebase database service methods here
@@ -23,6 +25,16 @@ class FirebaseDataServices {
       if (kDebugMode) {
         print('Error creating document: $e');
       }
+      rethrow;
+    }
+  }
+
+  Future<void> createOutfit(Outfit outfit) async {
+    try {
+      await createDocument(CONSTANTS.outfitsCollection, outfit.toJson());
+      createLogTransaction("CREATE_OUTFIT", true, outfit.outfitId, '');
+    } catch (e) {
+      createLogTransaction("CREATE_OUTFIT", false, outfit.outfitId, e.toString());
       rethrow;
     }
   }

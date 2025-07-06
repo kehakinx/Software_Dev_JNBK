@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 import 'package:closetinventory/controllers/utilities/shared_preferences.dart';
+import 'package:closetinventory/controllers/firebase/database_service.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:closetinventory/models/user_dataobj.dart';
 import 'package:closetinventory/models/outfit_dataobj.dart';
@@ -18,11 +19,13 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
   final _outfitNameController = TextEditingController();
   final _stylingNotesController = TextEditingController();
   final _searchController = TextEditingController();
+  final FirebaseDataServices _dataServices = FirebaseDataServices();
   
   List<Item> _allItems = [];
   List<Item> _filteredItems = [];
   List<Item> _selectedItems = [];
   USER? _user;
+  bool _isLoading = false;
   
   String _selectedCategory = 'All Categories';
   String _selectedColor = 'All Colors';
@@ -71,7 +74,7 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
     });
   }
 
-  void _saveOutfit() {
+  void _saveOutfit() async {
     if (_outfitNameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter outfit name')),
@@ -86,21 +89,40 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
       return;
     }
 
-    final outfit = Outfit(
-      outfitId: DateTime.now().millisecondsSinceEpoch.toString(),
-      userId: _user!.userId,
-      name: _outfitNameController.text.trim(),
-      itemIds: _selectedItems.map((item) => item.itemId).toList(),
-      stylingNotes: _stylingNotesController.text.trim().isEmpty ? null : _stylingNotesController.text.trim(),
-    );
+    setState(() {
+      _isLoading = true;
+    });
 
-    CONSTANTS.mockOutfits.add(outfit);
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Outfit saved!')),
-    );
-    
-    context.goNamed(CONSTANTS.homePage);
+    try {
+      final outfit = Outfit(
+        outfitId: DateTime.now().millisecondsSinceEpoch.toString(),
+        userId: _user!.userId,
+        name: _outfitNameController.text.trim(),
+        itemIds: _selectedItems.map((item) => item.itemId).toList(),
+        stylingNotes: _stylingNotesController.text.trim().isEmpty ? null : _stylingNotesController.text.trim(),
+      );
+
+      // Save to Firebase
+      await _dataServices.createOutfit(outfit);
+      
+      // Also add to mock data for immediate UI update
+      CONSTANTS.mockOutfits.add(outfit);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Outfit saved to Firebase!')),
+      );
+      
+      context.goNamed(CONSTANTS.homePage);
+
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving outfit: $e')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -332,9 +354,11 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: _saveOutfit,
+                  onPressed: _isLoading ? null : _saveOutfit,
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
-                  child: const Text('Save Outfit'),
+                  child: _isLoading 
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text('Save Outfit'),
                 ),
               ],
             ),
