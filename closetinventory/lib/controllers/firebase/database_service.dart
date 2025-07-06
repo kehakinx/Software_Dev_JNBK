@@ -1,13 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:closetinventory/models/outfit_dataobj.dart';
+import 'package:closetinventory/models/user_dataobj.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 
 class FirebaseDataServices {
-  // Add your Firebase database service methods here
-  // For example, methods to read/write data to Firestore or Realtime Database
-  // This is a placeholder for the actual implementation
-
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
   FirebaseFirestore getFirestore() {
@@ -25,6 +22,31 @@ class FirebaseDataServices {
       if (kDebugMode) {
         print('Error creating document: $e');
       }
+      rethrow;
+    }
+  }
+
+  Future<void> createDocumentWithId(
+    String collection,
+    String documentId,
+    Map<String, dynamic> data,
+  ) async {
+    try {
+      await _fireStore.collection(collection).doc(documentId).set(data);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error creating document with ID: $e');
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> createUser(USER user) async {
+    try {
+      await createDocumentWithId(CONSTANTS.usersCollection, user.userId, user.toJson());
+      createLogTransaction("CREATE_USER", true, user.userId, '');
+    } catch (e) {
+      createLogTransaction("CREATE_USER", false, user.userId, e.toString());
       rethrow;
     }
   }
