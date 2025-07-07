@@ -29,7 +29,11 @@ class FirebaseAuthServices {
     }
   }
 
-  Future<USER?> registerWithEmailPassword(String email, String password, String displayName) async {
+  Future<USER?> registerWithEmailPassword(
+    String email,
+    String password,
+    String displayName,
+  ) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -46,15 +50,25 @@ class FirebaseAuthServices {
         );
 
         await _dataServices.createUser(newUser);
-        
+
         CONSTANTS.mockUsers.add(newUser);
 
-        _dataServices.createLogTransaction("REGISTER_USER", true, firebaseUser.uid, '');
+        _dataServices.createLogTransaction(
+          "REGISTER_USER",
+          true,
+          firebaseUser.uid,
+          '',
+        );
         return newUser;
       }
       return null;
     } catch (e) {
-      _dataServices.createLogTransaction("REGISTER_USER", false, '', e.toString());
+      _dataServices.createLogTransaction(
+        "REGISTER_USER",
+        false,
+        '',
+        e.toString(),
+      );
       rethrow;
     }
   }
@@ -69,13 +83,18 @@ class FirebaseAuthServices {
       User? firebaseUser = result.user;
       if (firebaseUser != null) {
         DocumentSnapshot userDoc = await _dataServices.getDocument(
-          CONSTANTS.usersCollection, 
-          firebaseUser.uid
+          CONSTANTS.usersCollection,
+          firebaseUser.uid,
         );
-        
+
         if (userDoc.exists) {
           USER user = USER.fromJson(userDoc.data() as Map<String, dynamic>);
-          _dataServices.createLogTransaction("LOGIN_USER", true, firebaseUser.uid, '');
+          _dataServices.createLogTransaction(
+            "LOGIN_USER",
+            true,
+            firebaseUser.uid,
+            '',
+          );
           return user;
         }
       }
