@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home_page.dart'; // Make sure to import your existing HomePage
 
 void main() {
   runApp(const MyApp());
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const WishlistPage(),
+      home: const WishlistPage(), // Keep Wishlist as initial page
     );
   }
 }
@@ -62,7 +63,6 @@ class _WishlistPageState extends State<WishlistPage> {
         _itemNameController.clear();
         _descriptionController.clear();
       });
-      // Hide keyboard after adding
       FocusScope.of(context).unfocus();
     }
   }
@@ -75,7 +75,6 @@ class _WishlistPageState extends State<WishlistPage> {
 
   void _markAsPurchased(int index) {
     setState(() {
-      // In a real app, you might move this to a "purchased" list
       _wishlistItems.removeAt(index);
     });
   }
@@ -85,7 +84,6 @@ class _WishlistPageState extends State<WishlistPage> {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // App Bar with centered title
           SliverAppBar(
             title: const Text(
               'My Closet Wishlist',
@@ -112,13 +110,24 @@ class _WishlistPageState extends State<WishlistPage> {
                 ),
               ),
             ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.home, color: Colors.white),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomePage()),
+                  );
+                },
+                tooltip: 'Go to Home',
+              ),
+            ],
           ),
-          // Content
+          // Rest of your existing content remains exactly the same...
           SliverPadding(
             padding: const EdgeInsets.all(16.0),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                // Add New Item Section
                 Card(
                   elevation: 4,
                   shape: RoundedRectangleBorder(
@@ -201,7 +210,6 @@ class _WishlistPageState extends State<WishlistPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
-                // My Wishlist Items Section
                 const Text(
                   'My Wishlist Items',
                   style: TextStyle(
@@ -214,7 +222,6 @@ class _WishlistPageState extends State<WishlistPage> {
               ]),
             ),
           ),
-          // Wishlist Items
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverList(
