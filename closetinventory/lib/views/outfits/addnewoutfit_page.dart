@@ -23,7 +23,6 @@ class AddNewOutfitPage extends StatefulWidget {
 class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
   final _outfitNameController = TextEditingController();
   final _stylingNotesController = TextEditingController();
-  final _searchController = TextEditingController();
   final FirebaseAuthServices _authServices = FirebaseAuthServices();
     final PlatformService _platformService = PlatformService.instance;
   late String _userId;
@@ -169,7 +168,6 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> categories = ['All Categories', ...CONSTANTS.categories];
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
