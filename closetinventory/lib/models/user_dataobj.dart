@@ -30,6 +30,19 @@ class USER {
     );
   }
 
+  factory USER.fromDocument(DocumentSnapshot doc) {
+    return USER(
+      userId: doc['userId'] as String,
+      email: doc['email'] as String,
+      displayName: doc['displayName'] as String,
+      profileImageUrl: doc['profileImageUrl'] as String?,
+      preference: Map<String, dynamic>.from(
+        doc['preference'] ?? {},
+      ),
+      createdDate: doc['createdDate'] as Timestamp? ?? Timestamp.now(),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'userId': userId,

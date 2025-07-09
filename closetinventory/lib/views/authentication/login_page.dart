@@ -64,20 +64,20 @@ class _LoginPageState extends State<LoginPage> {
         await MyPreferences.setString('prefUserKey', newUser.userId);
         await MyPreferences.setHasOnboarded(true);
 
-        ScaffoldMessenger.of(
+       mounted ? ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('Login successful!')));
+        ).showSnackBar(const SnackBar(content: Text('Login successful!'))) : null;
 
-        context.goNamed(CONSTANTS.homePage);
+        mounted ? context.goNamed(CONSTANTS.homePage, extra: newUser) : null;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
+        mounted ? ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login failed. Check credentials.')),
-        );
+        ) : null;
       }
     } catch (e) {
-      ScaffoldMessenger.of(
+      mounted ? ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Login failed: ${e.toString()}')));
+      ).showSnackBar(SnackBar(content: Text('Login failed: ${e.toString()}'))) : null;
     } finally {
       setState(() {
         _isLoading = false;

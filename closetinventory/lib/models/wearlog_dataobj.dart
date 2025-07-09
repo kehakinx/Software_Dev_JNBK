@@ -40,4 +40,14 @@ class WEARLOG {
     notes: json['notes'],
     createdDate: json['createdDate'] as Timestamp,
   );
+
+  factory WEARLOG.fromDocument(DocumentSnapshot doc) => WEARLOG(
+    logId: doc['logId'],
+    userId: doc['userId'],
+    itemId: doc['itemId'],
+    outfitId: doc['outfitId'],
+    wearDate: Timestamp.fromMillisecondsSinceEpoch(doc['wearDate']),
+    notes: doc['notes'],
+    createdDate: doc['createdDate'] as Timestamp,
+  );
 }

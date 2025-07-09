@@ -34,6 +34,19 @@ class Outfit {
     );
   }
 
+  factory Outfit.fromDocument(DocumentSnapshot doc) {
+    return Outfit(
+      outfitId: doc['outfitId'] as String,
+      userId: doc['userId'] as String,
+      name: doc['name'] as String,
+      itemIds: List<String>.from(doc['itemIds'] ?? []),
+      stylingNotes: doc['stylingNotes'] as String?,
+      wareCount: doc['warCount'] != null ? doc['warCount'] as int : 0,
+      lastWornDate: doc['lastWornDate'] as Timestamp? ?? Timestamp.now(),
+      createdDate: doc['createdDate'] as Timestamp? ?? Timestamp.now(),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'outfitId': outfitId,

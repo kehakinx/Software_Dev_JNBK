@@ -1,42 +1,103 @@
+import 'dart:async';
+
 import 'package:closetinventory/controllers/firebase/authentication_service.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 import 'package:closetinventory/controllers/utilities/platform_service.dart';
 import 'package:closetinventory/controllers/utilities/shared_preferences.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:closetinventory/models/outfit_dataobj.dart';
-import 'package:closetinventory/models/user_dataobj.dart';
 import 'package:closetinventory/views/modules/button_module.dart';
 import 'package:closetinventory/views/modules/dashcard_module.dart';
 import 'package:closetinventory/views/modules/closetitemcard_module.dart';
 import 'package:closetinventory/views/modules/responsivewrap_module.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+
+  const HomePage({
+    super.key,
+    });
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final FirebaseAuthServices _firebaseAuth = FirebaseAuthServices();
   final PlatformService _platformService = PlatformService.instance;
-  late final List<Item> _closetItems;
-  late final List<Outfit> _outfits;
-  late USER _user;
+  final FirebaseAuthServices _authServices = FirebaseAuthServices();
+  late String _userId;
+  late List<Item> _closetItems = [];
+  late List<Outfit> _outfits = [];
+  StreamSubscription? _itemSubscription;
+  StreamSubscription? _outfitSubscription;
 
-   @override
+  @override
   void initState() {
     super.initState();
-
-    _user = CONSTANTS.mockUsers.firstWhere((user) => user.userId == MyPreferences.getString('prefUserKey'));
-    _closetItems = List<Item>.from(CONSTANTS.mockClosetItems.where((item) => item.userId == _user.userId));
-    _outfits = List<Outfit>.from(CONSTANTS.mockOutfits.where((outfit) => outfit.userId == _user.userId));
+      _initializeFirebaseAndAuth();
   }
+
+  Future<void> _initializeFirebaseAndAuth() async{
+    _authServices.getAuth().authStateChanges().listen((User? user){
+      if(user != null){
+        setState(() {
+          _userId = MyPreferences.getString('prefUserKey');
+        });
+        _loadCloset();
+      }else{
+        mounted ? context.go(CONSTANTS.loginPage) : null;
+      }
+    });
+  }
+
+  Future<void> _loadCloset() async {
+    _itemSubscription?.cancel();
+   
+    _itemSubscription = _authServices.getDataServices().getFirestore().collection(CONSTANTS.itemsCollection).where('userId', isEqualTo: _userId).snapshots().listen((snapshot){
+      if(!mounted) return;
+
+      setState(() {
+        _closetItems = snapshot.docs.map((doc) => Item.fromDocument(doc)).toList();
+      });
+    },
+    onError: (error){
+      if(!mounted) return;
+      setState(() {
+        
+      });
+    });
+
+    _outfitSubscription?.cancel();
+
+    _outfitSubscription = _authServices.getDataServices().getFirestore().collection(CONSTANTS.outfitsCollection).where('userId', isEqualTo: _userId).snapshots().listen((snapshot){
+      if(!mounted) return;
+
+      setState(() {
+        _outfits = snapshot.docs.map((doc) => Outfit.fromDocument(doc)).toList();
+      });
+    },
+    onError: (error){
+      if(!mounted) return;
+      setState(() {
+        
+      });
+    });
+  }
+
+   @override
+   void dispose(){
+    _itemSubscription?.cancel();
+    _outfitSubscription?.cancel();
+
+    super.dispose();
+   }
 
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(

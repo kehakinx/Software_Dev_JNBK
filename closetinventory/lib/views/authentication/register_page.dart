@@ -85,16 +85,16 @@ class _RegisterPageState extends State<RegisterPage> {
         await MyPreferences.setString('prefUserKey', newUser.userId);
         await MyPreferences.setHasOnboarded(true);
 
-        ScaffoldMessenger.of(context).showSnackBar(
+        mounted ? ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Registration successful! Account created in Firebase.')),
-        );
+        ) : null;
 
         // Navigate to home page
-        context.goNamed(CONSTANTS.homePage);
+       mounted ? context.goNamed(CONSTANTS.homePage) : null;
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
+        mounted ? ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Registration failed. Please try again.')),
-        );
+        ) : null;
       }
 
     } catch (e) {
@@ -107,9 +107,9 @@ class _RegisterPageState extends State<RegisterPage> {
         errorMessage = 'Invalid email address';
       }
       
-      ScaffoldMessenger.of(context).showSnackBar(
+      mounted ? ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
-      );
+      ) : null;
     } finally {
       setState(() {
         _isLoading = false;

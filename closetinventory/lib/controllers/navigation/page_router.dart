@@ -35,7 +35,7 @@ final GoRouter router = GoRouter(
       name: CONSTANTS.homePage,
       path: CONSTANTS.homePage,
       pageBuilder: (context, state) =>
-          NoTransitionPage<void>(key: state.pageKey, child: const HomePage()),
+          NoTransitionPage<void>(key: state.pageKey, child: HomePage()),
     ),
     GoRoute(
       name: CONSTANTS.addItemPage,

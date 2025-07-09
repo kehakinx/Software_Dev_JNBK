@@ -1,11 +1,16 @@
+import 'dart:async';
+
+import 'package:closetinventory/controllers/firebase/authentication_service.dart';
+import 'package:closetinventory/controllers/utilities/platform_service.dart';
+import 'package:closetinventory/views/modules/closetfilter_module.dart';
+import 'package:closetinventory/views/modules/closetitemcard_module.dart';
+import 'package:closetinventory/views/modules/responsivewrap_module.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 import 'package:closetinventory/controllers/utilities/shared_preferences.dart';
-import 'package:closetinventory/controllers/firebase/database_service.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
-import 'package:closetinventory/models/user_dataobj.dart';
 import 'package:closetinventory/models/outfit_dataobj.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:go_router/go_router.dart';
 
 class AddNewOutfitPage extends StatefulWidget {
@@ -19,48 +24,85 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
   final _outfitNameController = TextEditingController();
   final _stylingNotesController = TextEditingController();
   final _searchController = TextEditingController();
-  final FirebaseDataServices _dataServices = FirebaseDataServices();
+  final FirebaseAuthServices _authServices = FirebaseAuthServices();
+    final PlatformService _platformService = PlatformService.instance;
+  late String _userId;
+  ClosetFilter? closetFilter ;
   
-  List<Item> _allItems = [];
+  late List<Item> _closetItems = [];
   List<Item> _filteredItems = [];
-  List<Item> _selectedItems = [];
-  USER? _user;
+  final List<Item> _selectedItems = [];
   bool _isLoading = false;
   
-  String _selectedCategory = 'All Categories';
-  String _selectedColor = 'All Colors';
+  // For dropdown options
+  List<String> _types = [];
+  List<String> _colors = [];
+
+ 
+  StreamSubscription? _itemSubscription;
 
   @override
   void initState() {
     super.initState();
-    _loadData();
+      _initializeFirebaseAndAuth();
   }
 
-  void _loadData() {
-    String userId = MyPreferences.getString('prefUserKey');
-    _user = CONSTANTS.mockUsers.firstWhere((user) => user.userId == userId);
-    _allItems = CONSTANTS.mockClosetItems.where((item) => item.userId == userId).toList();
-    _filteredItems = List.from(_allItems);
+  Future<void> _initializeFirebaseAndAuth() async{
+    _authServices.getAuth().authStateChanges().listen((User? user){
+      if(user != null){
+        setState(() {
+          _userId = MyPreferences.getString('prefUserKey');
+        });
+        _loadCloset();
+      }else{
+        mounted ? context.go(CONSTANTS.loginPage) : null;
+      }
+    });
   }
 
-  void _applyFilters() {
+  Future<void> _loadCloset() async {
+    _itemSubscription?.cancel();
+   
+    _itemSubscription = _authServices.getDataServices().getFirestore().collection(CONSTANTS.itemsCollection).where('userId', isEqualTo: _userId).snapshots().listen((snapshot){
+      if(!mounted) return;
+
+      setState(() {
+        _closetItems = snapshot.docs.map((doc) => Item.fromDocument(doc)).toList();
+        _filteredItems = List.from(_closetItems);
+
+         List<Item> tempFilteredItems = List<Item>.from(_closetItems); // Create a temporary list for filtering
+        // Extract unique types and colors for dropdowns
+        _types = _closetItems.map((item) => item.type).toSet().toList()..sort();
+        _colors = _closetItems.map((item) => item.color != null ? item.color! : '').toSet().toList()..sort();
+
+        _filteredItems = tempFilteredItems; // Update _filteredItems with initial filtered list
+
+        closetFilter = ClosetFilter(
+                filteredItems: _closetItems, // Pass the original _closetItems to the filter
+                filterTypes: _types,
+                filterColors: _colors,
+                onFilterApplied: (filteredList) => _updateFilteredItems(filteredList), // Pass the new callback
+              );
+      });
+    },
+    onError: (error){
+      if(!mounted) return;
+      setState(() {
+        
+      });
+    });
+  }
+
+   @override
+   void dispose(){
+    _itemSubscription?.cancel();
+
+    super.dispose();
+   }
+
+   void _updateFilteredItems(List<Item> filteredList) { // New function to receive filtered list
     setState(() {
-      _filteredItems = _allItems.where((item) {
-        bool search = _searchController.text.isEmpty || 
-            item.name.toLowerCase().contains(_searchController.text.toLowerCase());
-        bool category = _selectedCategory == 'All Categories' || item.type == _selectedCategory;
-        
-        bool color = true;
-        if (_selectedColor != 'All Colors') {
-          if (item.color != null && item.color!.isNotEmpty) {
-            color = item.color!.toLowerCase().contains(_selectedColor.toLowerCase());
-          } else {
-            color = false;
-          }
-        }
-        
-        return search && category && color;
-      }).toList();
+      _filteredItems = filteredList;
     });
   }
 
@@ -96,28 +138,28 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
     try {
       final outfit = Outfit(
         outfitId: DateTime.now().millisecondsSinceEpoch.toString(),
-        userId: _user!.userId,
+        userId: _userId,
         name: _outfitNameController.text.trim(),
         itemIds: _selectedItems.map((item) => item.itemId).toList(),
         stylingNotes: _stylingNotesController.text.trim().isEmpty ? null : _stylingNotesController.text.trim(),
       );
 
       // Save to Firebase
-      await _dataServices.createOutfit(outfit);
+      await _authServices.getDataServices().createOutfit(outfit);
       
       // Also add to mock data for immediate UI update
       CONSTANTS.mockOutfits.add(outfit);
       
-      ScaffoldMessenger.of(context).showSnackBar(
+      mounted ? ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Outfit saved to Firebase!')),
-      );
+      ) : null ;
       
-      context.goNamed(CONSTANTS.homePage);
-
+      mounted ? context.goNamed(CONSTANTS.homePage) : null;
+    
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      mounted ? ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error saving outfit: $e')),
-      );
+      ) : null ;
     } finally {
       setState(() {
         _isLoading = false;
@@ -213,135 +255,35 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
             const Text('Select Items from Your Wardrobe', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             
-            Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: const InputDecoration(
-                      hintText: 'Search item...',
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (_) => _applyFilters(),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: DropdownButtonFormField<String>(
-                    value: _selectedCategory,
-                    decoration: const InputDecoration(border: OutlineInputBorder()),
-                    items: categories.map((cat) => DropdownMenuItem(value: cat, child: Text(cat))).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedCategory = value!;
-                      });
-                      _applyFilters();
-                    },
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TextField(
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedColor = value.isEmpty ? 'All Colors' : value;
-                      });
-                      _applyFilters();
-                    },
-                    decoration: const InputDecoration(
-                      hintText: 'All Colors',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: _applyFilters,
-                  child: const Text('Apply Filters'),
-                ),
-              ],
-            ),
+            ?closetFilter,
             const SizedBox(height: 24),
             
             SizedBox(
               height: 400,
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 6,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 0.85,
-                ),
-                itemCount: _filteredItems.length,
-                itemBuilder: (context, index) {
-                  final item = _filteredItems[index];
-                  final isSelected = _selectedItems.contains(item);
-                  
-                  return GestureDetector(
-                    onTap: () => _toggleItem(item),
-                    child: Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(
-                          color: isSelected ? Colors.blue : Colors.transparent,
-                          width: 2,
-                        ),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: isSelected ? const Color(0xFFEBF4FF) : Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                                  color: const Color(0xFFEBF4FF),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    item.name,
-                                    style: const TextStyle(fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      item.name,
-                                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    Text(
-                                      '${item.type} - ${item.brand ?? 'Unknown'} - ${item.color ?? 'No Color'}',
-                                      style: const TextStyle(fontSize: 8),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+              child: ResponsiveWrap(
+                children: [ 
+                  SizedBox(
+                    width: double.infinity,
+                    height: 300,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _filteredItems.length,
+                      itemBuilder: (context, index) {
+                        final item = _filteredItems[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child:ClosetItemCard(
+                            closetItem: item,
+                            ratio: _platformService.isWeb ? 1 : .85,
+                            onTap: true,
+                            shortSummary: true,
+                            closetItemCallBack:  () => _toggleItem(item),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 32),
@@ -351,14 +293,14 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
               children: [
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
+                  child: const Text('Cancel',),
                 ),
                 ElevatedButton(
                   onPressed: _isLoading ? null : _saveOutfit,
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
                   child: _isLoading 
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Save Outfit'),
+                    : const Text('Save Outfit', style: TextStyle(color:  Colors.white,),),
                 ),
               ],
             ),

@@ -46,6 +46,27 @@ class WishlistItem {
     );
   }
 
+  factory WishlistItem.fromDocument(DocumentSnapshot doc) {
+    return WishlistItem(
+      wishlistItem: doc['wishlistItem'] as String,
+      userId: doc['userId'] as String,
+      name: doc['name'] as String,
+      type: doc['type'] as String,
+      brand: doc['brand'] as String,
+      desiredPrice: (doc['desiredPrice'] != null)
+          ? (doc['desiredPrice'] as num).toDouble()
+          : null,
+      reason: doc['reason'] as String?,
+      isPurchased: doc['isPurchased'] ?? false,
+      imageUrl: doc['imageUrl'] as String?,
+      createdDate: doc['createdDate'] is Timestamp
+          ? doc['createdDate']
+          : (doc['createdDate'] != null
+                ? Timestamp.fromMillisecondsSinceEpoch(doc['createdDate'])
+                : Timestamp.now()),
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'wishlistItem': wishlistItem,

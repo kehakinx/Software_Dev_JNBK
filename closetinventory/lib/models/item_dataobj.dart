@@ -77,6 +77,35 @@ class Item {
     );
   }
 
+factory Item.fromDocument(DocumentSnapshot doc) {
+    return Item(
+      itemId: doc['itemId'] as String,
+      userId: doc['userId'] as String,
+      name: doc['name'] as String,
+      type: doc['type'] as String,
+      brand: doc['brand'] as String? ?? '',
+      size: doc['size'] as String?,
+      color: doc['color'] as String?,
+      material: doc['material'] as String?,
+      purchaseDate: doc['purchaseDate'] as Timestamp? ?? Timestamp.now(),
+      price: (doc['price'] as num? ?? 0.00).toDouble(),
+      careInstructions: doc['careInstructions'] as String?,
+      photoUrls: List<String>.from(doc['photoUrls'] ?? []),
+      tags: List<String>.from(doc['tags'] ?? []),
+      customAttributes: Map<String, dynamic>.from(
+        doc['customAttributes'] ?? {},
+      ),
+      currentLocationId: doc['currentLocationId'] as String? ?? '',
+      wearCount: doc['wearCount'] as int,
+      lastWornDate: doc['lastWornDate'] as Timestamp? ?? Timestamp.now(),
+      declutterStatus: doc['declutterStatus'] as String? ?? '',
+      isDuplicateSuggestion: doc['isDuplicateSuggestion'] as bool? ?? false,
+      isPlannedForDonation: doc['isPlannedForDonation'] as bool? ?? false,
+      createdDate: doc['createdDate'] as Timestamp? ?? Timestamp.now(),
+    );
+  }
+
+
   Map<String, dynamic> toJson() {
     return {
       'itemId': itemId,

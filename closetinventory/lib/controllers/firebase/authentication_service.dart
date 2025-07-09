@@ -81,25 +81,23 @@ class FirebaseAuthServices {
       );
 
       User? firebaseUser = result.user;
-      if (firebaseUser != null) {
-        DocumentSnapshot userDoc = await _dataServices.getDocument(
-          CONSTANTS.usersCollection,
-          firebaseUser.uid,
-        );
+      if(firebaseUser != null){
+         _dataServices.createLogTransaction("LOGIN_USER",true,firebaseUser.uid, '',);
 
-        if (userDoc.exists) {
-          USER user = USER.fromJson(userDoc.data() as Map<String, dynamic>);
-          _dataServices.createLogTransaction(
-            "LOGIN_USER",
-            true,
-            firebaseUser.uid,
-            '',
-          );
+        USER? user = await _dataServices.getUserData(firebaseUser.uid);
+        if(user != null){
+          _dataServices.createLogTransaction("GET USER DATA", true, user.userId, '');
           return user;
+        }else{
+          _dataServices.createLogTransaction("GET USER DATA", false, '', 'User data was null!');
+          return null;
         }
       }
-      return null;
-    } catch (e) {
+      else {
+        _dataServices.createLogTransaction("GET USER DATA", false, '', 'No User data found!');
+        return null;
+      }
+    }catch (e) {
       _dataServices.createLogTransaction("LOGIN_USER", false, '', e.toString());
       rethrow;
     }

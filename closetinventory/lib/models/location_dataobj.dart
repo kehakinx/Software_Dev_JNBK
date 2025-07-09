@@ -25,6 +25,16 @@ class Location {
     );
   }
 
+  factory Location.fromDocument(DocumentSnapshot doc) {
+    return Location(
+      locationId: doc['locationId'] as String,
+      userId: doc['userId'] as String,
+      name: doc['name'] as String,
+      description: doc['description'] as String?,
+      createdDate: doc['createdDate'] as Timestamp,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'locationId': locationId,

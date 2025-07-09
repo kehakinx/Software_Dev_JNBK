@@ -1,6 +1,9 @@
+import 'package:closetinventory/controllers/firebase/database_service.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class EditItemPage extends StatefulWidget {
@@ -16,6 +19,7 @@ class EditItemPage extends StatefulWidget {
 }
 
 class _EditItemPageState extends State<EditItemPage> {
+  final FirebaseDataServices _dataServices = FirebaseDataServices();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _itemNameController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
@@ -40,7 +44,10 @@ class _EditItemPageState extends State<EditItemPage> {
     _purchaseDateController.text = widget.closetItem.purchaseDate!.toDate().toString();
     _priceController.text = widget.closetItem.price?.toString() ?? '';
     _selectedCategory = widget.closetItem.type;
-    _selectedDate = widget.closetItem.purchaseDate?.toDate();
+    if(widget.closetItem.purchaseDate != null ){
+      _selectedDate = widget.closetItem.purchaseDate!.toDate();
+      _purchaseDateController.text = DateFormat('MM/dd/yyyy').format(widget.closetItem.purchaseDate!.toDate()) ;
+    }
   }
 
   @override
@@ -72,10 +79,24 @@ class _EditItemPageState extends State<EditItemPage> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
+      Item newItem = Item(itemId: widget.closetItem.itemId, 
+          userId: widget.closetItem.userId, 
+          name: _itemNameController.text, 
+          type: _selectedCategory.toString(),
+          brand: _brandController.text,
+          color: _colorController.text,
+          size: _sizeController.text,
+          material: _materialController.text,
+          purchaseDate:_selectedDate != null ? Timestamp.fromDate(_selectedDate!) : null,
+          price: double.tryParse(_priceController.text),
+          );
+
       // Handle form submission logic here
+      _dataServices.updateItem(newItem);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Item added!')),
+        SnackBar(content: Text('Item updated!')),
       );
+      context.goNamed(CONSTANTS.homePage);
     }
   }
 

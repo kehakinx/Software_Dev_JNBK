@@ -1,5 +1,10 @@
+import 'package:closetinventory/controllers/firebase/database_service.dart';
+import 'package:closetinventory/controllers/utilities/shared_preferences.dart';
+import 'package:closetinventory/models/item_dataobj.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class AddNewItemPage extends StatefulWidget {
@@ -10,6 +15,7 @@ class AddNewItemPage extends StatefulWidget {
 }
 
 class _AddNewItemPageState extends State<AddNewItemPage> {
+  final FirebaseDataServices _dataServices = FirebaseDataServices();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _itemNameController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
@@ -18,6 +24,7 @@ class _AddNewItemPageState extends State<AddNewItemPage> {
   final TextEditingController _materialController = TextEditingController();
   final TextEditingController _purchaseDateController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  late final String _userId ;
 
   String? _selectedCategory;
   DateTime? _selectedDate;
@@ -32,6 +39,20 @@ class _AddNewItemPageState extends State<AddNewItemPage> {
     _purchaseDateController.dispose();
     _priceController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _loadPreferences();
+  }
+
+  Future<void> _loadPreferences() async {
+    final userKey = MyPreferences.getString('prefUserKey');
+    setState(() {
+      _userId = userKey;
+    });
   }
 
   Future<void> _pickDate(BuildContext context) async {
@@ -52,9 +73,23 @@ class _AddNewItemPageState extends State<AddNewItemPage> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       // Handle form submission logic here
+      Item newItem = Item(itemId: '', 
+          userId: _userId, 
+          name: _itemNameController.text, 
+          type: _selectedCategory.toString(),
+          brand: _brandController.text,
+          color: _colorController.text,
+          size: _sizeController.text,
+          material: _materialController.text,
+          purchaseDate:_selectedDate != null ? Timestamp.fromDate(_selectedDate!) : null,
+          price: double.tryParse(_priceController.text),
+          );
+      
+      _dataServices.createItem(newItem);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Item added!')),
       );
+      context.goNamed(CONSTANTS.homePage);
     }
   }
 

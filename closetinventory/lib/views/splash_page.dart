@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:closetinventory/controllers/firebase/authentication_service.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 import 'package:closetinventory/controllers/utilities/shared_preferences.dart';
-import 'package:closetinventory/models/user_dataobj.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,12 +15,11 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   final FirebaseAuthServices _firebaseAuth = FirebaseAuthServices();
-  late USER _user;
 
   @override
   void initState() {
     MyPreferences.init();
-
+    _isPreferenceExist();
     Timer(const Duration(seconds: 5), () {
       _isSignedIn();
     });
@@ -29,19 +27,22 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void _isSignedIn() async {
-    /*if (_firebaseAuth.isUserLoggedIn()) {
-      if (MyPreferences.getHasOnboarded()) {
-        */
-    _user = CONSTANTS.mockUsers.firstWhere((user) => user.userId == 'user789');
-    MyPreferences.setString('prefUserKey', _user.userId);
-       
-    context.goNamed(CONSTANTS.homePage);
-    /* } else {
+    if (_firebaseAuth.isUserLoggedIn()) {
+      if (MyPreferences.getHasOnboarded()) {  
+        context.goNamed(CONSTANTS.homePage);
+      } else {
         context.goNamed(CONSTANTS.onboardingPage);
       }
     } else {
       context.goNamed(CONSTANTS.loginPage);
-    }*/
+    }
+  }
+
+  void _isPreferenceExist() async{
+    final userId = MyPreferences.getString('prefUserKey');
+    if(userId.isNotEmpty){
+      _firebaseAuth.getCurrentUser();
+    }
   }
 
   @override
