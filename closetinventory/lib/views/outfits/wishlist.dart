@@ -1,5 +1,5 @@
+import 'package:closetinventory/views/home_page.dart';
 import 'package:flutter/material.dart';
-import 'home_page.dart'; // Make sure to import your existing HomePage
 
 void main() {
   runApp(const MyApp());
