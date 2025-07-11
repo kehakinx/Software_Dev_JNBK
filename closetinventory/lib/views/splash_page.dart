@@ -59,7 +59,9 @@ class _SplashPageState extends State<SplashPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(CONSTANTS.appName),
-            //Image.asset("assets/logo/${Constants.APP_LOGO}", scale: 5,),
+            Image.asset(
+              CONSTANTS.appLogo,
+              fit: BoxFit.fill),
           ],
         ),
       ),

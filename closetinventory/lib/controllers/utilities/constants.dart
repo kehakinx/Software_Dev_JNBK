@@ -11,7 +11,7 @@ class CONSTANTS {
   static const String appVersionCode = '';
   static const String appDescription =
       'Manage your wardrobe and outfits with ease.';
-  static const String appLogo = 'assets/images/app_logo.png';
+  static const String appLogo = 'assets/closetinventory.jpg';
 
   // COMMON APP ROUTES
   static const String splashPage = '/splash';

@@ -1,5 +1,6 @@
 import 'package:closetinventory/controllers/firebase/database_service.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
+import 'package:closetinventory/views/modules/responsivewrap_module.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
@@ -28,9 +29,14 @@ class _EditItemPageState extends State<EditItemPage> {
   final TextEditingController _materialController = TextEditingController();
   final TextEditingController _purchaseDateController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _wearCountController = TextEditingController();
+  final TextEditingController _lastWornDateController = TextEditingController();
+  final TextEditingController _isMarkForDonationController = TextEditingController();
 
   String? _selectedCategory;
   DateTime? _selectedDate;
+  DateTime? _selectedLastWornDate;
+  bool _blnMarkForDonation = false;
 
   @override
   void initState() {
@@ -44,6 +50,18 @@ class _EditItemPageState extends State<EditItemPage> {
     _purchaseDateController.text = widget.closetItem.purchaseDate!.toDate().toString();
     _priceController.text = widget.closetItem.price?.toString() ?? '';
     _selectedCategory = widget.closetItem.type;
+    _wearCountController.text = widget.closetItem.wearCount.toString();
+    if(widget.closetItem.lastWornDate != null){
+      _selectedLastWornDate = widget.closetItem.lastWornDate!.toDate();
+      _lastWornDateController.text = DateFormat('MM/dd/yyyy').format(widget.closetItem.lastWornDate!.toDate());
+    }
+    _blnMarkForDonation = widget.closetItem.isPlannedForDonation;
+    if(widget.closetItem.isPlannedForDonation){
+      _isMarkForDonationController.text = 'True';
+    }
+    else{
+      _isMarkForDonationController.text = 'False';
+    }
     if(widget.closetItem.purchaseDate != null ){
       _selectedDate = widget.closetItem.purchaseDate!.toDate();
       _purchaseDateController.text = DateFormat('MM/dd/yyyy').format(widget.closetItem.purchaseDate!.toDate()) ;
@@ -59,6 +77,9 @@ class _EditItemPageState extends State<EditItemPage> {
     _materialController.dispose();
     _purchaseDateController.dispose();
     _priceController.dispose();
+    _wearCountController.dispose();
+    _lastWornDateController.dispose();
+    _isMarkForDonationController.dispose();
     super.dispose();
   }
 
@@ -77,6 +98,22 @@ class _EditItemPageState extends State<EditItemPage> {
     }
   }
 
+  Future<void> _selectLastWornDate(BuildContext context) async{
+    final DateTime? picked = await showDatePicker(
+      context: context, 
+      initialDate: _selectedLastWornDate ?? DateTime.now(),
+      firstDate: _selectedLastWornDate!, 
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _selectedLastWornDate = picked;
+        _lastWornDateController.text = DateFormat('MM/dd/yyyy').format(picked);
+        _wearCountController.text = '${int.parse(_wearCountController.text)+1}'; 
+      });
+    }
+  }
+
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       Item newItem = Item(itemId: widget.closetItem.itemId, 
@@ -88,6 +125,9 @@ class _EditItemPageState extends State<EditItemPage> {
           size: _sizeController.text,
           material: _materialController.text,
           purchaseDate:_selectedDate != null ? Timestamp.fromDate(_selectedDate!) : null,
+          lastWornDate: _selectedLastWornDate != null ? Timestamp.fromDate(_selectedLastWornDate!) : null,
+          isPlannedForDonation: _blnMarkForDonation,
+          wearCount: int.parse(_wearCountController.text),
           price: double.tryParse(_priceController.text),
           );
 
@@ -197,6 +237,35 @@ class _EditItemPageState extends State<EditItemPage> {
                   hintText: 'e.g. 49.99',
                 ),
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
+              ),
+              SizedBox(height: 16),
+              ResponsiveWrap(
+                children: [ 
+                  Text(
+                    'Times Worn: ${_wearCountController.text};  Last Worn Date: ${_lastWornDateController.text}',
+                  ),
+                  SizedBox(width: 5),
+
+                  ElevatedButton(
+                    onPressed: () => _selectLastWornDate(context),
+                    child: Text('Log Worn'),
+                  ),
+                  SizedBox(width: 16),
+                  const Text(
+                    'Mark to Donate',
+                  ),
+                  Switch(
+                    value: _blnMarkForDonation, 
+                    onChanged: (bool value){
+                      setState((){
+                        _blnMarkForDonation = value;
+                      });
+                    },
+                    activeColor: CONSTANTS.primaryAccentColor,
+                    inactiveThumbColor: CONSTANTS.primaryCardColor,
+                    inactiveTrackColor: CONSTANTS.disabledButtonColor,
+                  ),
+                ],
               ),
               SizedBox(height: 32),
               Row(

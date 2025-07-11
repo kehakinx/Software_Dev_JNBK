@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "671584062848",
+    "firebase_url": "https://closetinventory-default-rtdb.firebaseio.com",
     "project_id": "closetinventory",
     "storage_bucket": "closetinventory.firebasestorage.app"
   },

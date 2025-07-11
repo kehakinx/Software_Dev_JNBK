@@ -46,6 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '671584062848',
     projectId: 'closetinventory',
     authDomain: 'closetinventory.firebaseapp.com',
+    databaseURL: 'https://closetinventory-default-rtdb.firebaseio.com',
     storageBucket: 'closetinventory.firebasestorage.app',
   );
 
@@ -54,6 +55,7 @@ class DefaultFirebaseOptions {
     appId: '1:671584062848:android:4a893adbc313fd3fbdc565',
     messagingSenderId: '671584062848',
     projectId: 'closetinventory',
+    databaseURL: 'https://closetinventory-default-rtdb.firebaseio.com',
     storageBucket: 'closetinventory.firebasestorage.app',
   );
 
@@ -62,6 +64,7 @@ class DefaultFirebaseOptions {
     appId: '1:671584062848:ios:cb0ffa8754aa703ebdc565',
     messagingSenderId: '671584062848',
     projectId: 'closetinventory',
+    databaseURL: 'https://closetinventory-default-rtdb.firebaseio.com',
     storageBucket: 'closetinventory.firebasestorage.app',
     iosBundleId: 'com.example.closetinventory',
   );
@@ -71,6 +74,7 @@ class DefaultFirebaseOptions {
     appId: '1:671584062848:ios:cb0ffa8754aa703ebdc565',
     messagingSenderId: '671584062848',
     projectId: 'closetinventory',
+    databaseURL: 'https://closetinventory-default-rtdb.firebaseio.com',
     storageBucket: 'closetinventory.firebasestorage.app',
     iosBundleId: 'com.example.closetinventory',
   );
@@ -81,6 +85,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '671584062848',
     projectId: 'closetinventory',
     authDomain: 'closetinventory.firebaseapp.com',
+    databaseURL: 'https://closetinventory-default-rtdb.firebaseio.com',
     storageBucket: 'closetinventory.firebasestorage.app',
   );
+
 }
