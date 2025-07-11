@@ -13,18 +13,24 @@ import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:closetinventory/models/outfit_dataobj.dart';
 import 'package:go_router/go_router.dart';
 
-class AddNewOutfitPage extends StatefulWidget {
-  const AddNewOutfitPage({super.key});
+class EditOutfitPage extends StatefulWidget {
+  final Outfit closetOutfit;
+
+  const EditOutfitPage({
+    super.key,
+    required this.closetOutfit,
+    });
 
   @override
-  State<AddNewOutfitPage> createState() => _AddNewOutfitPageState();
+  State<EditOutfitPage> createState() => _EditOutfitPageState();
 }
 
-class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
+class _EditOutfitPageState extends State<EditOutfitPage> {
   final _outfitNameController = TextEditingController();
   final _stylingNotesController = TextEditingController();
   final FirebaseAuthServices _authServices = FirebaseAuthServices();
-    final PlatformService _platformService = PlatformService.instance;
+  final PlatformService _platformService = PlatformService.instance;
+  
   late String _userId;
   ClosetFilter? closetFilter ;
   
@@ -44,6 +50,9 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
   void initState() {
     super.initState();
       _initializeFirebaseAndAuth();
+
+      _outfitNameController.text = widget.closetOutfit.name;
+      _stylingNotesController.text = widget.closetOutfit.stylingNotes ?? '';
   }
 
   Future<void> _initializeFirebaseAndAuth() async{
@@ -68,6 +77,12 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
       setState(() {
         _closetItems = snapshot.docs.map((doc) => Item.fromDocument(doc)).toList();
         _filteredItems = List.from(_closetItems);
+
+        for(Item item in _closetItems){
+          if(widget.closetOutfit.itemIds.contains(item.itemId)){
+            _selectedItems.add(item);
+          }
+        }
 
          List<Item> tempFilteredItems = List<Item>.from(_closetItems); // Create a temporary list for filtering
         // Extract unique types and colors for dropdowns
@@ -95,6 +110,8 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
    @override
    void dispose(){
     _itemSubscription?.cancel();
+    _outfitNameController.dispose();
+    _stylingNotesController.dispose();
 
     super.dispose();
    }
@@ -136,15 +153,18 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
 
     try {
       final outfit = Outfit(
-        outfitId: '',
-        userId: _userId,
+        outfitId: widget.closetOutfit.outfitId,
+        userId: widget.closetOutfit.userId,
         name: _outfitNameController.text.trim(),
         itemIds: _selectedItems.map((item) => item.itemId).toList(),
+        wearCount: widget.closetOutfit.wearCount,
+        lastWornDate : widget.closetOutfit.lastWornDate,
+        createdDate : widget.closetOutfit.createdDate,
         stylingNotes: _stylingNotesController.text.trim().isEmpty ? null : _stylingNotesController.text.trim(),
       );
 
       // Save to Firebase
-      await _authServices.getDataServices().createOutfit(outfit);
+      await _authServices.getDataServices().updateOutfit(outfit);
       
       // Also add to mock data for immediate UI update
       CONSTANTS.mockOutfits.add(outfit);
@@ -172,7 +192,7 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        title: const Text('Create New Outfit'),
+        title: const Text('Edit Outfit'),
         backgroundColor: const Color(0xFFF8F9FA),
         elevation: 0,
       ),

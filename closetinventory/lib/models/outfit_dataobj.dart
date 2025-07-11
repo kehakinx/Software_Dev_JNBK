@@ -6,7 +6,7 @@ class Outfit {
   final String name;
   final List<String> itemIds;
   final String? stylingNotes;
-  final int wareCount;
+  final int wearCount;
   final Timestamp? lastWornDate;
   final Timestamp createdDate;
 
@@ -16,7 +16,7 @@ class Outfit {
     required this.name,
     required this.itemIds,
     this.stylingNotes,
-    this.wareCount = 0,
+    this.wearCount = 0,
     this.lastWornDate,
     Timestamp? createdDate,
   }) : createdDate = createdDate ?? Timestamp.now();
@@ -28,7 +28,7 @@ class Outfit {
       name: json['name'] as String,
       itemIds: List<String>.from(json['itemIds'] ?? []),
       stylingNotes: json['stylingNotes'] as String?,
-      wareCount: json['warCount'] != null ? json['warCount'] as int : 0,
+      wearCount: json['wearCount'] != null ? json['wearCount'] as int : 0,
       lastWornDate: json['lastWornDate'] as Timestamp? ?? Timestamp.now(),
       createdDate: json['createdDate'] as Timestamp? ?? Timestamp.now(),
     );
@@ -41,7 +41,7 @@ class Outfit {
       name: doc['name'] as String,
       itemIds: List<String>.from(doc['itemIds'] ?? []),
       stylingNotes: doc['stylingNotes'] as String?,
-      wareCount: doc['warCount'] != null ? doc['warCount'] as int : 0,
+      wearCount: doc['wearCount'] != null ? doc['wearCount'] as int : 0,
       lastWornDate: doc['lastWornDate'] as Timestamp? ?? Timestamp.now(),
       createdDate: doc['createdDate'] as Timestamp? ?? Timestamp.now(),
     );
@@ -54,7 +54,7 @@ class Outfit {
       'name': name,
       'itemIds': itemIds,
       'stylingNotes': stylingNotes,
-      'warCount': wareCount,
+      'wearCount': wearCount,
       'lastWornDate': lastWornDate,
       'createdDate': createdDate,
     };
