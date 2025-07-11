@@ -117,7 +117,6 @@ class _HomePageState extends State<HomePage> {
                             ),
                         ),
                   ),
-                  const Spacer(),
                   CustomButtonModule(
                         icon: Icons.add,
                         title: 'Add New Item',
