@@ -31,6 +31,7 @@ class CONSTANTS {
   static const String viewItemPage = '/viewItem';
   static const String viewallItemsPage = '/viewallItems';
   static const String viewOutfitPage = '/viewOutfit';
+  static const String viewallOutfitsPage = '/viewallOutfits';
   static const String viewLocationPage = '/viewLocation';
   static const String viewWishListPage = '/viewWishList';
   static const String viewAnalysisPage = '/viewAnalysis';
@@ -94,6 +95,7 @@ class CONSTANTS {
   static const String viewDeclutterTextEn = 'View Declutter';
   static const String dashboardClosetTextEn = 'My Closet Dashboard';
   static const String dashboardDigitalClosetTextEn = 'My Digital Closet';
+  static const String dashboardDigitalOutfitsTextEn = 'My Digital Outfits';
   // SPANISH
   static const String welcomeTextEs = 'Bienvenido a Closet Inventory';
   static const String loginTextEs = 'Iniciar sesión';
@@ -114,6 +116,7 @@ class CONSTANTS {
   static const String viewDeclutterTextEs = 'Ver decluttering';
   static const String dashboardClosetTextEs = 'Mi panel de control del armario';
   static const String dashboardDigitalClosetTextEs = 'Mi armario digital';
+  static const String dashboardDigitalOutfitsTextEs = 'My Digital Outfits';
 
   // COMMON APP LANGUAGE CODES
   static const String enLanguageCode = 'En';
