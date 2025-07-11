@@ -190,6 +190,16 @@ class CONSTANTS {
       'profilePic': '',
         }),
   ];
+
+  static Item mockItem = Item.fromJson({
+    'itemId': '1',
+    'userId': 'user123',
+    'name': 'Blue Jeans',
+    'type': 'Bottoms',
+    'wearCount': 10,
+    isOnboarded: true,
+    'isPlannedForDonation': false,
+  });
     
   static List<Item> mockClosetItems = [
     Item.fromJson({
