@@ -156,42 +156,27 @@ class FirebaseDataServices {
     return null;
   }
 
-  Future<List<Item>> getAllClosetItemsForUser(String userId) async{
-    List<Item> closetItems = [];
-    try{
-      QuerySnapshot closetItemsSnapShot = await _fireStore.collection(CONSTANTS.itemsCollection).where('userId', isEqualTo: userId).get();
-      if(closetItemsSnapShot.size > 0){
-        final allData = closetItemsSnapShot.docs.map((doc) => doc.data()).toList();
-        for(Object? obj in allData){
-          closetItems.add(Item.fromJson(obj as Map<String, dynamic>));
-        }
-        createLogTransaction("GETTING CLOSET ITEM DATA",true,userId,'',);
-        return closetItems;
-      }else{
-        createLogTransaction("GETTING CLOSET ITEM DATA",true,userId,'No Records Found!',);
-        return closetItems;
-      }
-   }catch(e){
-      createLogTransaction("GETTING CLOSET ITEM DATA",false,userId,e.toString(),);
-    }
-    return closetItems;
-  }
-
   // UPDATE FUNCTIONS
   Future<void> updateDocument(
     String collection,
     Map<String, dynamic> data,
   ) async {
+    String recordId = '';
     try {
       switch(collection){
         case CONSTANTS.itemsCollection:
-          await _fireStore.collection(collection).doc(data['itemId']).update(data);
-          createLogTransaction("UPDATING $collection", true, data['itemId'], '');
+          recordId = data['itemId'];
+          await _fireStore.collection(collection).doc(recordId).update(data);
+          
+        case CONSTANTS.outfitsCollection:
+          recordId = data['outfitId'];
+          await _fireStore.collection(collection).doc(recordId).update(data);
         default:
           break;
       }
+      createLogTransaction("UPDATING $collection", true, recordId, '');
     }catch(e){
-      createLogTransaction("UPDATING $collection", false, data['itemId'], e.toString());
+      createLogTransaction("UPDATING $collection", false, recordId, e.toString());
     }
   }
 
@@ -201,6 +186,15 @@ class FirebaseDataServices {
       createLogTransaction("UPDATE ${CONSTANTS.itemsCollection}", true, editItem.itemId, '');
     }catch(e){
       createLogTransaction("UPDATE ${CONSTANTS.itemsCollection}", false, editItem.itemId, e.toString());
+    }
+  }
+
+  Future<void> updateOutfit(Outfit editOutfit) async {
+    try{
+      updateDocument(CONSTANTS.outfitsCollection, editOutfit.toJson());
+      createLogTransaction("UPDATE ${CONSTANTS.outfitsCollection}", true, editOutfit.outfitId, '');
+    }catch(e){
+      createLogTransaction("UPDATE ${CONSTANTS.outfitsCollection}", false, editOutfit.outfitId, e.toString());
     }
   }
 

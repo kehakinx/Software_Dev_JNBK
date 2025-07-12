@@ -1,4 +1,5 @@
 import 'package:closetinventory/models/item_dataobj.dart';
+import 'package:closetinventory/models/outfit_dataobj.dart';
 import 'package:closetinventory/views/authentication/login_page.dart';
 import 'package:closetinventory/views/authentication/register_page.dart';
 import 'package:closetinventory/views/home_page.dart';
@@ -6,6 +7,8 @@ import 'package:closetinventory/views/items/addnewitem_page.dart';
 import 'package:closetinventory/views/items/edititem_page.dart';
 import 'package:closetinventory/views/items/viewallitems_page.dart';
 import 'package:closetinventory/views/outfits/addnewoutfit_page.dart';
+import 'package:closetinventory/views/outfits/editoutfit_page.dart';
+import 'package:closetinventory/views/outfits/viewoutfits_page.dart';
 import 'package:closetinventory/views/splash_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
@@ -59,10 +62,22 @@ final GoRouter router = GoRouter(
           )),
     ),
     GoRoute(
+      name: CONSTANTS.viewallOutfitsPage,
+      path: CONSTANTS.viewallOutfitsPage,
+      pageBuilder: (context, state) =>
+          NoTransitionPage<void>(key: state.pageKey, child: ViewalloutfitsPage()),
+    ),
+    GoRoute(
       name: CONSTANTS.viewItemPage,
       path: CONSTANTS.viewItemPage,
       pageBuilder: (context, state) =>
           NoTransitionPage<void>(key: state.pageKey, child: EditItemPage(closetItem: state.extra as Item,)),
+    ),
+    GoRoute(
+      name: CONSTANTS.viewOutfitPage,
+      path: CONSTANTS.viewOutfitPage,
+      pageBuilder: (context, state) =>
+          NoTransitionPage<void>(key: state.pageKey, child: EditOutfitPage(closetOutfit: state.extra as Outfit,)),
     ),
   ],
 );

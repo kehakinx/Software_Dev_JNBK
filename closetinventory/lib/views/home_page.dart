@@ -9,6 +9,7 @@ import 'package:closetinventory/models/outfit_dataobj.dart';
 import 'package:closetinventory/views/modules/button_module.dart';
 import 'package:closetinventory/views/modules/dashcard_module.dart';
 import 'package:closetinventory/views/modules/closetitemcard_module.dart';
+import 'package:closetinventory/views/modules/outfitcard_module.dart';
 import 'package:closetinventory/views/modules/responsivewrap_module.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -148,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                     icon: Icons.assignment_outlined,
                     number: _outfits.length,
                     color: CONSTANTS.successColor,
-                    link: CONSTANTS.homePage,
+                    link: CONSTANTS.viewallOutfitsPage,
                     ratio: _platformService.isWeb ? 1 : .7,
                   ),
                   DashCard(
@@ -197,6 +198,40 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.symmetric(horizontal: 8.0),
                           child: ClosetItemCard(
                             closetItem: item,
+                            ratio: _platformService.isWeb ? 1 : .85,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  CONSTANTS.dashboardDigitalOutfitsTextEn,
+                  style: TextStyle(
+                    fontSize: _platformService.isWeb ? 36 : 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ResponsiveWrap(
+                children: [ 
+                  SizedBox(
+                    width: double.infinity,
+                    height: 300,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: _outfits.length,
+                      itemBuilder: (context, index) {
+                        final outfititem = _outfits[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: OutfitCard(
+                            outfit: outfititem,
                             ratio: _platformService.isWeb ? 1 : .85,
                           ),
                         );
