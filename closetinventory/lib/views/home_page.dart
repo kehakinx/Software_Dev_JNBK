@@ -170,6 +170,14 @@ class _HomePageState extends State<HomePage> {
                     extra: "declutter",
                     ratio: _platformService.isWeb ? 1 : .7,
                   ),
+                  DashCard(
+                    title: "Wishlist",
+                    icon: Icons.star,
+                    number: 0, // You can update this with actual wishlist count later
+                    color: CONSTANTS.primaryAccentColor,
+                    link: '/wishlist', // Add this route to your CONSTANTS file
+                    ratio: _platformService.isWeb ? 1 : .7,
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
