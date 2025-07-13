@@ -9,6 +9,7 @@ import 'package:closetinventory/views/items/viewallitems_page.dart';
 import 'package:closetinventory/views/outfits/addnewoutfit_page.dart';
 import 'package:closetinventory/views/outfits/editoutfit_page.dart';
 import 'package:closetinventory/views/outfits/viewoutfits_page.dart';
+import 'package:closetinventory/views/outfits/wishlist.dart';
 import 'package:closetinventory/views/splash_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
@@ -78,6 +79,11 @@ final GoRouter router = GoRouter(
       path: CONSTANTS.viewOutfitPage,
       pageBuilder: (context, state) =>
           NoTransitionPage<void>(key: state.pageKey, child: EditOutfitPage(closetOutfit: state.extra as Outfit,)),
+    ),
+    GoRoute(
+      path: CONSTANTS.wishlistPage,
+      name: CONSTANTS.wishlistPage,
+      builder: (context, state) => const WishlistPage(),
     ),
   ],
 );

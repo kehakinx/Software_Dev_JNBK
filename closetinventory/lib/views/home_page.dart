@@ -173,9 +173,9 @@ class _HomePageState extends State<HomePage> {
                   DashCard(
                     title: "Wishlist",
                     icon: Icons.star,
-                    number: 0, // You can update this with actual wishlist count later
+                    number: 0, 
                     color: CONSTANTS.primaryAccentColor,
-                    link: '/wishlist', // Add this route to your CONSTANTS file
+                    link: CONSTANTS.wishlistPage, 
                     ratio: _platformService.isWeb ? 1 : .7,
                   ),
                 ],
