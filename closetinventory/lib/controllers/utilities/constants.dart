@@ -37,6 +37,7 @@ class CONSTANTS {
   static const String viewAnalysisPage = '/viewAnalysis';
   static const String viewWearLogPage = '/viewWearLog';
   static const String viewDeclutterPage = '/viewDeclutter';
+  static const String wishlistPage = '/wishlist'; 
 
   // COMMON APP COLLECTIONS
   static const String usersCollection = 'users';

@@ -1,6 +1,6 @@
 import 'package:closetinventory/views/home_page.dart';
 import 'package:flutter/material.dart';
-
+/*
 void main() {
   runApp(const MyApp());
 }
@@ -24,12 +24,18 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+*/
 
 class WishlistPage extends StatefulWidget {
-  const WishlistPage({super.key});
+  final bool fromHome;
+  
+  const WishlistPage({
+    Key? key, 
+    this.fromHome = false,
+  }) : super(key: key);
 
   @override
-  _WishlistPageState createState() => _WishlistPageState();
+  State<WishlistPage> createState() => _WishlistPageState();
 }
 
 class _WishlistPageState extends State<WishlistPage> {

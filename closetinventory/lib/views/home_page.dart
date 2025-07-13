@@ -176,6 +176,7 @@ class _HomePageState extends State<HomePage> {
                     number: 0, 
                     color: CONSTANTS.primaryAccentColor,
                     link: CONSTANTS.wishlistPage, 
+                    extra: "fromHome", 
                     ratio: _platformService.isWeb ? 1 : .7,
                   ),
                 ],

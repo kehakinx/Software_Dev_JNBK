@@ -81,9 +81,15 @@ final GoRouter router = GoRouter(
           NoTransitionPage<void>(key: state.pageKey, child: EditOutfitPage(closetOutfit: state.extra as Outfit,)),
     ),
     GoRoute(
-      path: CONSTANTS.wishlistPage,
       name: CONSTANTS.wishlistPage,
-      builder: (context, state) => const WishlistPage(),
+      path: CONSTANTS.wishlistPage,
+      pageBuilder: (context, state) =>
+          NoTransitionPage<void>(
+            key: state.pageKey, 
+            child: WishlistPage(
+              fromHome: state.extra == null, 
+            ),
+          ),
     ),
   ],
 );
