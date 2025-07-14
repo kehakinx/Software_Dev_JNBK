@@ -80,7 +80,7 @@ class _EditOutfitPageState extends State<EditOutfitPage> {
 
         for(Item item in _closetItems){
           if(widget.closetOutfit.itemIds.contains(item.itemId)){
-            _selectedItems.add(item);
+            _toggleItem(item);
           }
         }
 
@@ -296,6 +296,7 @@ class _EditOutfitPageState extends State<EditOutfitPage> {
                             onTap: true,
                             shortSummary: true,
                             closetItemCallBack:  () => _toggleItem(item),
+                            isSelected: _selectedItems.contains(item),
                           ),
                         );
                       },

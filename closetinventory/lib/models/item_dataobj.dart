@@ -135,4 +135,5 @@ factory Item.fromDocument(DocumentSnapshot doc) {
   String get summary {
     return '$type - ${brand.isEmpty  ? 'Unknown Brand' : brand} - ${color ?? 'No Color'}';
   }
+
 }

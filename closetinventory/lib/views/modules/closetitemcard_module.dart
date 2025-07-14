@@ -9,6 +9,7 @@ class ClosetItemCard extends StatefulWidget {
   final bool shortSummary;
   final VoidCallback? closetItemCallBack;
   final bool onTap;
+  final bool isSelected;
 
 
   const ClosetItemCard({
@@ -18,6 +19,7 @@ class ClosetItemCard extends StatefulWidget {
     this.shortSummary = false,
     this.closetItemCallBack,
     this.onTap = false,
+    this.isSelected = false,
   });
 
   @override
@@ -37,11 +39,18 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
   Color closetItemBorderColor = Colors.transparent;
   Color closetItemBody = Colors.white;
   bool isSelected = false;
-  
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isSelected = widget.isSelected;
+  }
+
   void _performCallBack(){
     if (widget.closetItemCallBack != null) {
       widget.closetItemCallBack!();
-     // _selectCard();
+     
      if(isSelected) {
        closetItemDecoration = closetItemSelectedDecoration;
        closetItemBorderColor = closetItemSelectedDecoration;
@@ -55,6 +64,8 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
      }
     }
   }
+
+
    
   @override
   Widget build(BuildContext context) {
