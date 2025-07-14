@@ -28,11 +28,8 @@ class MyApp extends StatelessWidget {
 
 class WishlistPage extends StatefulWidget {
   final bool fromHome;
-  
-  const WishlistPage({
-    Key? key, 
-    this.fromHome = false,
-  }) : super(key: key);
+
+  const WishlistPage({Key? key, this.fromHome = false}) : super(key: key);
 
   @override
   State<WishlistPage> createState() => _WishlistPageState();
@@ -157,15 +154,22 @@ class _WishlistPageState extends State<WishlistPage> {
                           controller: _itemNameController,
                           decoration: InputDecoration(
                             labelText: 'Item Name',
-                            labelStyle: const TextStyle(color: Colors.deepPurple),
+                            labelStyle: const TextStyle(
+                              color: Colors.deepPurple,
+                            ),
                             hintText: 'e.g., Blue Denim Jeans',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: Colors.deepPurple),
+                              borderSide: const BorderSide(
+                                color: Colors.deepPurple,
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: Colors.deepPurple, width: 2),
+                              borderSide: const BorderSide(
+                                color: Colors.deepPurple,
+                                width: 2,
+                              ),
                             ),
                           ),
                         ),
@@ -174,15 +178,22 @@ class _WishlistPageState extends State<WishlistPage> {
                           controller: _descriptionController,
                           decoration: InputDecoration(
                             labelText: 'Description (Optional)',
-                            labelStyle: const TextStyle(color: Colors.deepPurple),
+                            labelStyle: const TextStyle(
+                              color: Colors.deepPurple,
+                            ),
                             hintText: 'e.g., High-waisted, straight leg',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: Colors.deepPurple),
+                              borderSide: const BorderSide(
+                                color: Colors.deepPurple,
+                              ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(color: Colors.deepPurple, width: 2),
+                              borderSide: const BorderSide(
+                                color: Colors.deepPurple,
+                                width: 2,
+                              ),
                             ),
                           ),
                           maxLines: 2,
@@ -231,76 +242,71 @@ class _WishlistPageState extends State<WishlistPage> {
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  final item = _wishlistItems[index];
-                  return Card(
-                    elevation: 2,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.name,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final item = _wishlistItems[index];
+                return Card(
+                  elevation: 2,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
-                          if (item.description.isNotEmpty) ...[
-                            const SizedBox(height: 8),
-                            Text(
-                              item.description,
-                              style: TextStyle(
-                                color: Colors.grey.shade700,
+                        ),
+                        if (item.description.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            item.description,
+                            style: TextStyle(color: Colors.grey.shade700),
+                          ),
+                        ],
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            OutlinedButton(
+                              onPressed: () => _removeItem(index),
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(color: Colors.red),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text(
+                                'Remove',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            ElevatedButton(
+                              onPressed: () => _markAsPurchased(index),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.deepPurple,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: const Text(
+                                'Mark as Purchased',
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ],
-                          const SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              OutlinedButton(
-                                onPressed: () => _removeItem(index),
-                                style: OutlinedButton.styleFrom(
-                                  side: const BorderSide(color: Colors.red),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Remove',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              ElevatedButton(
-                                onPressed: () => _markAsPurchased(index),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.deepPurple,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Mark as Purchased',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  );
-                },
-                childCount: _wishlistItems.length,
-              ),
+                  ),
+                );
+              }, childCount: _wishlistItems.length),
             ),
           ),
         ],
@@ -313,8 +319,5 @@ class WishlistItem {
   final String name;
   final String description;
 
-  WishlistItem({
-    required this.name,
-    this.description = '',
-  });
+  WishlistItem({required this.name, this.description = ''});
 }

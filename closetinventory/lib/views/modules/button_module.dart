@@ -5,20 +5,22 @@ class CustomButtonModule extends StatelessWidget {
   final IconData? icon;
   final String title;
   final Color color;
-  final String link;
+  final String? link;
   final double height;
   final double width;
   final double ratio;
+  final VoidCallback? onTap;
 
   const CustomButtonModule({
     super.key,
     this.icon,
     required this.title,
     required this.color,
-    required this.link,
+    this.link,
     this.height = 50,
     this.width = 200,
     this.ratio = 1,
+    this.onTap,
   });
 
   @override
@@ -38,9 +40,13 @@ class CustomButtonModule extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           minimumSize: Size(width * ratio, height * ratio),
         ),
-        onPressed: () {
-          context.pushNamed(link);
-        },
+        onPressed:
+            onTap ??
+            () {
+              if (link != null) {
+                context.pushNamed(link!);
+              }
+            },
       ),
     );
   }

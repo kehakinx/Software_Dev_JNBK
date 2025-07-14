@@ -9,17 +9,14 @@ import 'package:closetinventory/models/outfit_dataobj.dart';
 import 'package:closetinventory/views/modules/button_module.dart';
 import 'package:closetinventory/views/modules/dashcard_module.dart';
 import 'package:closetinventory/views/modules/closetitemcard_module.dart';
-import 'package:closetinventory/views/modules/outfitcard_module.dart';
 import 'package:closetinventory/views/modules/responsivewrap_module.dart';
+import 'package:closetinventory/views/outfits/wishlist.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class HomePage extends StatefulWidget {
-
-  const HomePage({
-    super.key,
-    });
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -37,68 +34,79 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-      _initializeFirebaseAndAuth();
+    _initializeFirebaseAndAuth();
   }
 
-  Future<void> _initializeFirebaseAndAuth() async{
-    _authServices.getAuth().authStateChanges().listen((User? user){
-      if(user != null){
+  Future<void> _initializeFirebaseAndAuth() async {
+    _authServices.getAuth().authStateChanges().listen((User? user) {
+      if (user != null) {
         setState(() {
           _userId = MyPreferences.getString('prefUserKey');
         });
         _loadCloset();
-      }else{
-        mounted ? context.go(CONSTANTS.loginPage) : null;
+      } else {
+        if (mounted) context.go(CONSTANTS.loginPage);
       }
     });
   }
 
   Future<void> _loadCloset() async {
     _itemSubscription?.cancel();
-   
-    _itemSubscription = _authServices.getDataServices().getFirestore().collection(CONSTANTS.itemsCollection).where('userId', isEqualTo: _userId).snapshots().listen((snapshot){
-      if(!mounted) return;
 
-      setState(() {
-        _closetItems = snapshot.docs.map((doc) => Item.fromDocument(doc)).toList();
-      });
-    },
-    onError: (error){
-      if(!mounted) return;
-      setState(() {
-        
-      });
-    });
+    _itemSubscription = _authServices
+        .getDataServices()
+        .getFirestore()
+        .collection(CONSTANTS.itemsCollection)
+        .where('userId', isEqualTo: _userId)
+        .snapshots()
+        .listen(
+          (snapshot) {
+            if (!mounted) return;
+
+            setState(() {
+              _closetItems = snapshot.docs
+                  .map((doc) => Item.fromDocument(doc))
+                  .toList();
+            });
+          },
+          onError: (error) {
+            if (!mounted) return;
+          },
+        );
 
     _outfitSubscription?.cancel();
 
-    _outfitSubscription = _authServices.getDataServices().getFirestore().collection(CONSTANTS.outfitsCollection).where('userId', isEqualTo: _userId).snapshots().listen((snapshot){
-      if(!mounted) return;
+    _outfitSubscription = _authServices
+        .getDataServices()
+        .getFirestore()
+        .collection(CONSTANTS.outfitsCollection)
+        .where('userId', isEqualTo: _userId)
+        .snapshots()
+        .listen(
+          (snapshot) {
+            if (!mounted) return;
 
-      setState(() {
-        _outfits = snapshot.docs.map((doc) => Outfit.fromDocument(doc)).toList();
-      });
-    },
-    onError: (error){
-      if(!mounted) return;
-      setState(() {
-        
-      });
-    });
+            setState(() {
+              _outfits = snapshot.docs
+                  .map((doc) => Outfit.fromDocument(doc))
+                  .toList();
+            });
+          },
+          onError: (error) {
+            if (!mounted) return;
+          },
+        );
   }
 
-   @override
-   void dispose(){
+  @override
+  void dispose() {
     _itemSubscription?.cancel();
     _outfitSubscription?.cancel();
-
     super.dispose();
-   }
-
+  }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -106,36 +114,48 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             children: [
               ResponsiveWrap(
-                children: [ 
+                children: [
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: 
-                      Text(
-                        CONSTANTS.dashboardClosetTextEn,
-                        style: TextStyle(
-                            fontSize: _platformService.isWeb ? 48 : 30,
-                            fontWeight: FontWeight.bold,
-                            ),
-                        ),
+                    child: Text(
+                      CONSTANTS.dashboardClosetTextEn,
+                      style: TextStyle(
+                        fontSize: _platformService.isWeb ? 48 : 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   CustomButtonModule(
-                        icon: Icons.add,
-                        title: 'Add New Item',
-                        color: CONSTANTS.infoColor,
-                        link: CONSTANTS.addItemPage,
-                        ratio: _platformService.isWeb ? 1 : .8
-                      ),
-                  const SizedBox(width: 8),
+                    icon: Icons.add,
+                    title: 'Add New Item',
+                    color: CONSTANTS.infoColor,
+                    link: CONSTANTS.addItemPage,
+                    ratio: _platformService.isWeb ? 1 : .8,
+                  ),
                   CustomButtonModule(
-                        title: 'Plan Outfits',
-                        color: CONSTANTS.primaryButtonColor,
-                        link: CONSTANTS.addOutfitPage,
-                        ratio: _platformService.isWeb ? 1 : .8
-                      ),
+                    title: 'Plan Outfits',
+                    color: CONSTANTS.primaryButtonColor,
+                    link: CONSTANTS.addOutfitPage,
+                    ratio: _platformService.isWeb ? 1 : .8,
+                  ),
+                  CustomButtonModule(
+                    icon: Icons.favorite_border,
+                    title: 'Wishlist',
+                    color: Colors.pink,
+                    ratio: _platformService.isWeb ? 1 : .8,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const WishlistPage(),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
-               ResponsiveWrap(
-                children: [ 
+              ResponsiveWrap(
+                children: [
                   DashCard(
                     title: "Total Items",
                     icon: Icons.checkroom,
@@ -149,13 +169,15 @@ class _HomePageState extends State<HomePage> {
                     icon: Icons.assignment_outlined,
                     number: _outfits.length,
                     color: CONSTANTS.successColor,
-                    link: CONSTANTS.viewallOutfitsPage,
+                    link: CONSTANTS.homePage,
                     ratio: _platformService.isWeb ? 1 : .7,
                   ),
                   DashCard(
                     title: "Unworn Items",
                     icon: Icons.warning_amber,
-                    number: _closetItems.where((context) => context.wearCount == 0).length,
+                    number: _closetItems
+                        .where((item) => item.wearCount == 0)
+                        .length,
                     color: CONSTANTS.warningColor,
                     link: CONSTANTS.viewallItemsPage,
                     extra: "unWorn",
@@ -164,19 +186,12 @@ class _HomePageState extends State<HomePage> {
                   DashCard(
                     title: "To Declutter",
                     icon: Icons.delete_outline,
-                    number: _closetItems.where((context) => context.isPlannedForDonation == true).length,
+                    number: _closetItems
+                        .where((item) => item.isPlannedForDonation == true)
+                        .length,
                     color: CONSTANTS.errorColor,
                     link: CONSTANTS.viewallItemsPage,
                     extra: "declutter",
-                    ratio: _platformService.isWeb ? 1 : .7,
-                  ),
-                  DashCard(
-                    title: "Wishlist",
-                    icon: Icons.star,
-                    number: 0, 
-                    color: CONSTANTS.primaryAccentColor,
-                    link: CONSTANTS.wishlistPage, 
-                    extra: "fromHome", 
                     ratio: _platformService.isWeb ? 1 : .7,
                   ),
                 ],
@@ -194,7 +209,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 16),
               ResponsiveWrap(
-                children: [ 
+                children: [
                   SizedBox(
                     width: double.infinity,
                     height: 300,
@@ -216,47 +231,13 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  CONSTANTS.dashboardDigitalOutfitsTextEn,
-                  style: TextStyle(
-                    fontSize: _platformService.isWeb ? 36 : 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              ResponsiveWrap(
-                children: [ 
-                  SizedBox(
-                    width: double.infinity,
-                    height: 300,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _outfits.length,
-                      itemBuilder: (context, index) {
-                        final outfititem = _outfits[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: OutfitCard(
-                            outfit: outfititem,
-                            ratio: _platformService.isWeb ? 1 : .85,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
               CustomButtonModule(
                 title: 'View All Items',
                 color: CONSTANTS.disabledButtonColor,
                 link: CONSTANTS.viewallItemsPage,
               ),
             ],
-          )
+          ),
         ),
       ),
     );
