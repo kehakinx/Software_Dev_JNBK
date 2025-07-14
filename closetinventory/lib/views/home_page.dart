@@ -231,7 +231,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               const SizedBox(height: 16),
-              CustomButtonModule(
+              const CustomButtonModule(
                 title: 'View All Items',
                 color: CONSTANTS.disabledButtonColor,
                 link: CONSTANTS.viewallItemsPage,

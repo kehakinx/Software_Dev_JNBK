@@ -117,7 +117,7 @@ class _ViewallitemsPageState extends State<ViewallitemsPage> {
    
     return Scaffold(
       appBar: AppBar(
-        title: Text('View All Clothing Items'),
+        title: const Text('View All Clothing Items'),
       ),
       body: SafeArea(
         child: Column(

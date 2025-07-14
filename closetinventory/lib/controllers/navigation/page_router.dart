@@ -39,7 +39,7 @@ final GoRouter router = GoRouter(
       name: CONSTANTS.homePage,
       path: CONSTANTS.homePage,
       pageBuilder: (context, state) =>
-          NoTransitionPage<void>(key: state.pageKey, child: HomePage()),
+          NoTransitionPage<void>(key: state.pageKey, child: const HomePage()),
     ),
     GoRoute(
       name: CONSTANTS.addItemPage,
@@ -66,7 +66,7 @@ final GoRouter router = GoRouter(
       name: CONSTANTS.viewallOutfitsPage,
       path: CONSTANTS.viewallOutfitsPage,
       pageBuilder: (context, state) =>
-          NoTransitionPage<void>(key: state.pageKey, child: ViewalloutfitsPage()),
+          NoTransitionPage<void>(key: state.pageKey, child: const ViewalloutfitsPage()),
     ),
     GoRoute(
       name: CONSTANTS.viewItemPage,

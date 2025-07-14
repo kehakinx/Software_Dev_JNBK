@@ -24,14 +24,14 @@ class _EditItemPageTrialState extends State<EditItemPageTrial> {
       _isPlannedForDonation = true;
     });
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Item marked for donation!')),
+      const SnackBar(content: Text('Item marked for donation!')),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Clothing Item')),
+      appBar: AppBar(title: const Text('Edit Clothing Item')),
       body: Center(
         child: ElevatedButton(
           onPressed: _isPlannedForDonation ? null : _markAsDonated,

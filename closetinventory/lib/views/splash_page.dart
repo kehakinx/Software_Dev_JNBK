@@ -58,7 +58,7 @@ class _SplashPageState extends State<SplashPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(CONSTANTS.appName),
+            const Text(CONSTANTS.appName),
             Image.asset(
               CONSTANTS.appLogo,
               fit: BoxFit.fill),

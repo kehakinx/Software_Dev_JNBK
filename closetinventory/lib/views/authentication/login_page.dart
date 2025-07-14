@@ -109,10 +109,10 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             children: [
               const SizedBox(height: 32),
-              Center(
+              const Center(
                 child: Text(
                   CONSTANTS.appName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF6200EE),

@@ -30,7 +30,7 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
   final Color closetItemUnSelectedDecoration = Colors.white;
   final Color closetItemUnworn = Colors.red;
   final Color closetItemDeclutter = Colors.orange;
-  final Color closetItemBodySelected = Color(0xFFEBF4FF);
+  final Color closetItemBodySelected = const Color(0xFFEBF4FF);
 
 
   Color closetItemDecoration = Colors.white;
@@ -95,11 +95,11 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
                 flex: 2,
                 child: Container(
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
                       top: Radius.circular(12),
                     ),
-                    color: const Color(0xFFEBF4FF),
+                    color: Color(0xFFEBF4FF),
                   ),
                   alignment: Alignment.center,
                   child: Center( child: widget.closetItem.photoUrls!.isNotEmpty

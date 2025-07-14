@@ -81,7 +81,7 @@ class _ClosetFilterState extends State<ClosetFilter> {
                   Expanded(
                     flex: 2,
                     child: TextField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Search by name or brand',
                         border: OutlineInputBorder(),
                         isDense: true,
@@ -93,20 +93,20 @@ class _ClosetFilterState extends State<ClosetFilter> {
 
                     ),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   // Type dropdown
                   Expanded(
                     flex: 1,
                     child: DropdownButtonFormField<String>(
                       value: _selectedType,
                       isExpanded: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Type',
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
                       items: [
-                        DropdownMenuItem(value: null, child: Text('All')),
+                        const DropdownMenuItem(value: null, child: Text('All')),
                         ..._types.map((type) => DropdownMenuItem(
                               value: type,
                               child: Text(type),
@@ -120,20 +120,20 @@ class _ClosetFilterState extends State<ClosetFilter> {
                     },
                     ),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   // Color dropdown
                   Expanded(
                     flex: 1,
                     child: DropdownButtonFormField<String>(
                       value: _selectedColor,
                       isExpanded: true,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Color',
                         border: OutlineInputBorder(),
                         isDense: true,
                       ),
                       items: [
-                        DropdownMenuItem(value: null, child: Text('All')),
+                        const DropdownMenuItem(value: null, child: Text('All')),
                         ..._colors.map((color) => DropdownMenuItem(
                               value: color,
                               child: Text(color),
@@ -148,11 +148,11 @@ class _ClosetFilterState extends State<ClosetFilter> {
 
                     ),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   // Apply Filters button
                   ElevatedButton(
                     onPressed: _applyFilters,
-                    child: Text('Apply Filters'),
+                    child: const Text('Apply Filters'),
                   ),
                 ],
               );

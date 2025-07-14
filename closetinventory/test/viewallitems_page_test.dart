@@ -8,13 +8,13 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            appBar: AppBar(title: Text('View All Clothing Items')),
+            appBar: AppBar(title: const Text('View All Clothing Items')),
             body: Column(
               children: [
-                TextField(decoration: InputDecoration(labelText: 'Search')),
+                const TextField(decoration: InputDecoration(labelText: 'Search')),
                 DropdownButton<String>(
-                  hint: Text('Filter'),
-                  items: [
+                  hint: const Text('Filter'),
+                  items: const [
                     DropdownMenuItem(value: 'winter', child: Text('Winter')),
                   ],
                   onChanged: (value) {},
@@ -32,7 +32,7 @@ void main() {
 
     testWidgets('user enters tag winter', (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: TextField(decoration: InputDecoration(labelText: 'Search')),
           ),
@@ -45,7 +45,7 @@ void main() {
 
     testWidgets('system displays items with winter tag', (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: Column(
               children: [
@@ -67,7 +67,7 @@ void main() {
           home: Scaffold(
             body: ElevatedButton(
               onPressed: () {},
-              child: Text('Winter Coat'),
+              child: const Text('Winter Coat'),
             ),
           ),
         ),
@@ -81,10 +81,10 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            appBar: AppBar(title: Text('Search Items')),
+            appBar: AppBar(title: const Text('Search Items')),
             body: ElevatedButton(
               onPressed: () {},
-              child: Text('Back'),
+              child: const Text('Back'),
             ),
           ),
         ),

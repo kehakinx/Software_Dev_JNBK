@@ -59,11 +59,11 @@ class _OutfitCardState extends State<OutfitCard> {
                 flex: 2,
                 child: Container(
                   width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.vertical(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.vertical(
                       top: Radius.circular(12),
                     ),
-                    color: const Color.fromARGB(255, 102, 122, 234),
+                    color: Color.fromARGB(255, 102, 122, 234),
                   ),
                   alignment: Alignment.center,
                   child: Center( child: Text(

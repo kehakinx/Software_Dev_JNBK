@@ -31,10 +31,10 @@ class _ViewalloutfitsPageState extends State<ViewalloutfitsPage> {
   //ClosetFilter? closetFilter ;
 
   // For dropdown options
-  List<String> _types = [];
-  List<String> _colors = [];
+  final List<String> _types = [];
+  final List<String> _colors = [];
 
-  List<Outfit> _filteredOutfits = [];
+  final List<Outfit> _filteredOutfits = [];
 
   @override
   void initState() {
@@ -107,7 +107,7 @@ class _ViewalloutfitsPageState extends State<ViewalloutfitsPage> {
    
     return Scaffold(
       appBar: AppBar(
-        title: Text('View All Outfits'),
+        title: const Text('View All Outfits'),
       ),
       body: SafeArea(
         child: Column(

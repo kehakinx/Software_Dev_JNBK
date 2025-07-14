@@ -134,7 +134,7 @@ class _EditItemPageState extends State<EditItemPage> {
       // Handle form submission logic here
       _dataServices.updateItem(newItem);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Item updated!')),
+        const SnackBar(content: Text('Item updated!')),
       );
       context.goNamed(CONSTANTS.homePage);
     }
@@ -144,7 +144,7 @@ class _EditItemPageState extends State<EditItemPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Clothing Item'),
+        title: const Text('Edit Clothing Item'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -154,7 +154,7 @@ class _EditItemPageState extends State<EditItemPage> {
             children: [
               TextFormField(
                 controller: _itemNameController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Item Name *',
                   hintText: 'e.g. Blue Midi Dress',
                 ),
@@ -165,21 +165,21 @@ class _EditItemPageState extends State<EditItemPage> {
                   return null;
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _brandController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Brand',
                   hintText: 'e.g. Zara, Nike',
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 value: _selectedCategory,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Category *',
                 ),
-                hint: Text('Select a category'),
+                hint: const Text('Select a category'),
                 items: CONSTANTS.categories
                     .map((cat) => DropdownMenuItem(
                           value: cat,
@@ -194,34 +194,34 @@ class _EditItemPageState extends State<EditItemPage> {
                   });
                 },
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _colorController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Color',
                   hintText: 'e.g. Blue, Black',
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _sizeController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Size',
                   hintText: 'e.g. M, L, 30x32',
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _materialController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Material',
                   hintText: 'e.g. Cotton, Silk, Denim',
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _purchaseDateController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Purchase Date',
                   hintText: 'mm/dd/yyyy',
                   suffixIcon: Icon(Icons.calendar_today),
@@ -229,28 +229,28 @@ class _EditItemPageState extends State<EditItemPage> {
                 readOnly: true,
                 onTap: () => _pickDate(context),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _priceController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Price (\$)',
                   hintText: 'e.g. 49.99',
                 ),
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ResponsiveWrap(
                 children: [ 
                   Text(
                     'Times Worn: ${_wearCountController.text};  Last Worn Date: ${_lastWornDateController.text}',
                   ),
-                  SizedBox(width: 5),
+                  const SizedBox(width: 5),
 
                   ElevatedButton(
                     onPressed: () => _selectLastWornDate(context),
-                    child: Text('Log Worn'),
+                    child: const Text('Log Worn'),
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   const Text(
                     'Mark to Donate',
                   ),
@@ -267,7 +267,7 @@ class _EditItemPageState extends State<EditItemPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -275,11 +275,11 @@ class _EditItemPageState extends State<EditItemPage> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: Text('Cancel'),
+                    child: const Text('Cancel'),
                   ),
                   ElevatedButton(
                     onPressed: _submitForm,
-                    child: Text('Save Item'),
+                    child: const Text('Save Item'),
                   ),
                 ],
               ),

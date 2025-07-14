@@ -18,7 +18,7 @@ void main() {
     await tester.pumpWidget(
       ChangeNotifierProvider<ThemeProvider>(
         create: (context) => ThemeProvider(),
-        child: MaterialApp(
+        child: const MaterialApp(
           home: DashCard(
             title: 'My Closet Dashboard',
             icon: Icons.checkroom,
