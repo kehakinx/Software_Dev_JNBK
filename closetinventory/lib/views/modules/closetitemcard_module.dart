@@ -11,7 +11,6 @@ class ClosetItemCard extends StatefulWidget {
   final bool onTap;
   final bool isSelected;
 
-
   const ClosetItemCard({
     super.key,
     required this.closetItem,
@@ -34,7 +33,6 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
   final Color closetItemDeclutter = Colors.orange;
   final Color closetItemBodySelected = const Color(0xFFEBF4FF);
 
-
   Color closetItemDecoration = Colors.white;
   Color closetItemBorderColor = Colors.transparent;
   Color closetItemBody = Colors.white;
@@ -42,7 +40,6 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     isSelected = widget.isSelected;
   }
@@ -65,7 +62,12 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
     }
   }
 
-
+  bool _hasPhoto() {
+    return widget.closetItem.photoUrls != null && 
+           widget.closetItem.photoUrls!.isNotEmpty &&
+           widget.closetItem.photoUrls!.first.isNotEmpty &&
+           widget.closetItem.photoUrls!.first.startsWith('https://firebasestorage.googleapis.com');
+  }
    
   @override
   Widget build(BuildContext context) {
@@ -90,7 +92,7 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
       elevation: 4,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: isSelected ? Colors.blue : Colors.transparent, width: 2),
+        side: BorderSide(color: isSelected ? Colors.blue : closetItemBorderColor, width: 2),
       ),
       shadowColor: Colors.black45,
       child: Container(
@@ -106,35 +108,13 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
                 flex: 2,
                 child: Container(
                   width: double.infinity,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.vertical(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(12),
                     ),
-                    color: Color(0xFFEBF4FF),
+                    color: Colors.grey[100],
                   ),
-                  alignment: Alignment.center,
-                  child: Center( child: widget.closetItem.photoUrls!.isNotEmpty
-                      ? ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(16),
-                          ),
-                          child: Image.network(
-                            widget.closetItem.photoUrls!.first,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                            errorBuilder: (context, error, stackTrace) => Icon(Icons.broken_image, size: 48 * widget.ratio),
-                          ),
-                        )
-                      : Text(
-                          widget.closetItem.name,
-                          style: TextStyle(
-                            fontSize: 22 * widget.ratio,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                ),
+                  child: _hasPhoto() ? _buildPhotoWidget() : _buildNoPhotoWidget(),
                 ),
               ),
               Expanded(
@@ -178,6 +158,84 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildPhotoWidget() {
+    final imageUrl = widget.closetItem.photoUrls!.first;
+    
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(
+        top: Radius.circular(12),
+      ),
+      child: Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(strokeWidth: 2),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Colors.green[50],
+              border: Border.all(color: Colors.green, width: 2),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  size: 32 * widget.ratio,
+                  color: Colors.green,
+                ),
+                SizedBox(height: 4 * widget.ratio),
+                Text(
+                  'Photo Uploaded',
+                  style: TextStyle(
+                    fontSize: 10 * widget.ratio,
+                    color: Colors.green[700],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildNoPhotoWidget() {
+    return Container(
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.checkroom,
+            size: 40 * widget.ratio,
+            color: Colors.grey[400],
+          ),
+          SizedBox(height: 8 * widget.ratio),
+          Text(
+            widget.closetItem.name,
+            style: TextStyle(
+              fontSize: 12 * widget.ratio,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }
