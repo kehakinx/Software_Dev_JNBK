@@ -1,11 +1,18 @@
+import 'dart:io';
+
 import 'package:closetinventory/controllers/firebase/database_service.dart';
+import 'package:closetinventory/controllers/firebase/storage_service.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:closetinventory/views/modules/responsivewrap_module.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 class EditItemPage extends StatefulWidget {
   final Item closetItem;
@@ -21,6 +28,8 @@ class EditItemPage extends StatefulWidget {
 
 class _EditItemPageState extends State<EditItemPage> {
   final FirebaseDataServices _dataServices = FirebaseDataServices();
+
+  final FirebaseStorageService _storageService = FirebaseStorageService();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _itemNameController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
@@ -32,11 +41,14 @@ class _EditItemPageState extends State<EditItemPage> {
   final TextEditingController _wearCountController = TextEditingController();
   final TextEditingController _lastWornDateController = TextEditingController();
   final TextEditingController _isMarkForDonationController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
 
   String? _selectedCategory;
   DateTime? _selectedDate;
   DateTime? _selectedLastWornDate;
   bool _blnMarkForDonation = false;
+  XFile? _selectedImage;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -66,6 +78,7 @@ class _EditItemPageState extends State<EditItemPage> {
       _selectedDate = widget.closetItem.purchaseDate!.toDate();
       _purchaseDateController.text = DateFormat('MM/dd/yyyy').format(widget.closetItem.purchaseDate!.toDate()) ;
     }
+    _loadSavedPhoto();
   }
 
   @override
@@ -81,6 +94,31 @@ class _EditItemPageState extends State<EditItemPage> {
     _lastWornDateController.dispose();
     _isMarkForDonationController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadSavedPhoto() async{
+    
+     try{
+      if(widget.closetItem.photoUrls != null){
+        final String url = widget.closetItem.photoUrls![0];
+        final uri = Uri.parse(url);
+        final response = await http.get(uri);
+
+        if(response.statusCode == 200){
+          final Directory tempDir = await getTemporaryDirectory();
+          final String fileName = p.basename(uri.path);
+          final String filePath = p.join(tempDir.path, fileName.isEmpty ? 'downloaded_file': fileName);
+
+          final File localFile = File(filePath);
+          await localFile.writeAsBytes(response.bodyBytes);
+          setState(() {
+            _selectedImage = XFile(localFile.path);
+          });
+        }
+      }
+    }catch(e){
+
+    }
   }
 
   Future<void> _pickDate(BuildContext context) async {
@@ -114,8 +152,77 @@ class _EditItemPageState extends State<EditItemPage> {
     }
   }
 
-  void _submitForm() {
+  Future<void> _takePhoto() async {
+    try {
+      final XFile? photo = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 800,
+        maxHeight: 800,
+        imageQuality: 80,
+      );
+      if (photo != null) {
+        setState(() {
+          _selectedImage = photo;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Photo taken!')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
+  Future<void> _pickFromGallery() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 800,
+        maxHeight: 800,
+        imageQuality: 80,
+      );
+      if (image != null) {
+        setState(() {
+          _selectedImage = image;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Photo selected!')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }
+
+  void _submitForm() async{
     if (_formKey.currentState!.validate()) {
+      if (_isLoading) return;
+      
+      setState(() {
+        _isLoading = true;
+      });
+       List<String> photoUrls = [];
+        
+        if (_selectedImage != null) {
+          final itemId = DateTime.now().millisecondsSinceEpoch.toString();
+          
+          final String? uploadedUrl = await _storageService.uploadItemPhoto(
+            _selectedImage!, 
+            widget.closetItem.userId, 
+            itemId
+          );
+          
+          if (uploadedUrl != null && uploadedUrl.isNotEmpty) {
+            if (uploadedUrl.startsWith('https://firebasestorage.googleapis.com')) {
+              photoUrls.add(uploadedUrl);
+            }
+          }
+        }
+
       Item newItem = Item(itemId: widget.closetItem.itemId, 
           userId: widget.closetItem.userId, 
           name: _itemNameController.text, 
@@ -129,6 +236,7 @@ class _EditItemPageState extends State<EditItemPage> {
           isPlannedForDonation: _blnMarkForDonation,
           wearCount: int.parse(_wearCountController.text),
           price: double.tryParse(_priceController.text),
+          photoUrls: photoUrls.isNotEmpty ? photoUrls : null,
           );
 
       // Handle form submission logic here
@@ -239,6 +347,75 @@ class _EditItemPageState extends State<EditItemPage> {
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 16),
+              const Text('Item Photo', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+              const SizedBox(height: 8),
+              Container(
+                height: 200,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey[300]!),
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.grey[50],
+                ),
+                child: _selectedImage != null
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.photo, size: 50, color: Colors.green),
+                          const SizedBox(height: 8),
+                          const Text('Photo Ready!', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                          Text(_selectedImage!.name, style: const TextStyle(fontSize: 12)),
+                          const SizedBox(height: 8),
+                          TextButton.icon(
+                            onPressed: _isLoading ? null : () {
+                              setState(() {
+                                _selectedImage = null;
+                              });
+                            },
+                            icon: const Icon(Icons.clear, size: 16),
+                            label: const Text('Remove'),
+                          ),
+                        ],
+                      )
+                    : const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add_photo_alternate, size: 50, color: Colors.grey),
+                          SizedBox(height: 8),
+                          Text('Add item photo (optional)', style: TextStyle(color: Colors.grey)),
+                        ],
+                      ),
+              ),
+              const SizedBox(height: 16),
+              
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: _isLoading ? null : _takePhoto,
+                      icon: const Icon(Icons.camera_alt),
+                      label: const Text('Take Photo'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: _isLoading ? null : _pickFromGallery,
+                      icon: const Icon(Icons.photo_library),
+                      label: const Text('From Gallery'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
               ResponsiveWrap(
                 children: [ 
                   Text(
