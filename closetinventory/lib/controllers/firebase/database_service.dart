@@ -199,4 +199,44 @@ class FirebaseDataServices {
   }
 
   // DELETE FUNCTIONS
+  Future<void> deleteDocument(
+    String collection,
+    Map<String, dynamic> data,
+  ) async {
+    String recordId = '';
+    try {
+      switch(collection){
+        case CONSTANTS.itemsCollection:
+          recordId = data['itemId'];
+          await _fireStore.collection(collection).doc(recordId).delete();
+          
+        case CONSTANTS.outfitsCollection:
+          recordId = data['outfitId'];
+          await _fireStore.collection(collection).doc(recordId).delete();
+        default:
+          break;
+      }
+      createLogTransaction("DELETING $collection", true, recordId, '');
+    }catch(e){
+      createLogTransaction("DELETING $collection", false, recordId, e.toString());
+    }
+  }
+
+  Future<void> deleteItem(Item editItem) async {
+    try{
+      deleteDocument(CONSTANTS.itemsCollection, editItem.toJson());
+      createLogTransaction("DELETE ${CONSTANTS.itemsCollection}", true, editItem.itemId, '');
+    }catch(e){
+      createLogTransaction("DELETE ${CONSTANTS.itemsCollection}", false, editItem.itemId, e.toString());
+    }
+  }
+
+  Future<void> deleteOutfit(Outfit editOutfit) async {
+    try{
+      deleteDocument(CONSTANTS.outfitsCollection, editOutfit.toJson());
+      createLogTransaction("DELETE ${CONSTANTS.outfitsCollection}", true, editOutfit.outfitId, '');
+    }catch(e){
+      createLogTransaction("DELETE ${CONSTANTS.outfitsCollection}", false, editOutfit.outfitId, e.toString());
+    }
+  }
 }
