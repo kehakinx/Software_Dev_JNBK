@@ -30,12 +30,6 @@ class _ViewalloutfitsPageState extends State<ViewalloutfitsPage> {
   StreamSubscription? _outfitSubscription;
   //ClosetFilter? closetFilter ;
 
-  // For dropdown options
-  final List<String> _types = [];
-  final List<String> _colors = [];
-
-  final List<Outfit> _filteredOutfits = [];
-
   @override
   void initState() {
     super.initState();
@@ -66,18 +60,8 @@ class _ViewalloutfitsPageState extends State<ViewalloutfitsPage> {
 
         List<Outfit> tempFilteredItems = List<Outfit>.from(_outiftItems); // Create a temporary list for filtering
 
-        // Extract unique types and colors for dropdowns
-       // _types = _outiftItems.map((item) => item.type).toSet().toList()..sort();
-       // _colors = _outiftItems.map((item) => item.color != null ? item.color! : '').toSet().toList()..sort();
-
         _outiftItems = tempFilteredItems; // Update _filteredItems with initial filtered list
 
-       /* closetFilter = ClosetFilter(
-                filteredItems: _outiftItems, // Pass the original _closetItems to the filter
-                filterTypes: _types,
-                filterColors: _colors,
-                onFilterApplied: (filteredList) => _updateFilteredItems(filteredList), // Pass the new callback
-              );*/
       });
       
     },
@@ -94,12 +78,6 @@ class _ViewalloutfitsPageState extends State<ViewalloutfitsPage> {
     _outfitSubscription?.cancel();
 
     super.dispose();
-  }
-
-  void _updateFilteredItems(List<Outfit> filteredList) { // New function to receive filtered list
-    setState(() {
-      _outiftItems = filteredList;
-    });
   }
 
   @override

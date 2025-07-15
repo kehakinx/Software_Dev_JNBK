@@ -5,6 +5,7 @@ class ClosetFilter extends StatefulWidget {
   final List<Item> filteredItems;
   final List<String> filterTypes;
   final List<String> filterColors;
+  final List<String> filterLocation;
   final ValueChanged<List<Item>> onFilterApplied; // Modified callback type
 
   const ClosetFilter({
@@ -12,6 +13,7 @@ class ClosetFilter extends StatefulWidget {
     required this.filteredItems,
     required this.filterTypes,
     required this.filterColors,
+    required this.filterLocation,
     required this.onFilterApplied, // Renamed callback
   });
 
@@ -27,10 +29,12 @@ class _ClosetFilterState extends State<ClosetFilter> {
   String _searchQuery = '';
   String? _selectedType;
   String? _selectedColor;
+  String? _selectedLocation;
 
   // For dropdown options
   List<String> _types = [];
   List<String> _colors = [];
+  List<String> _location = [];
 
 
   List<Item> getFilterItems(){
@@ -51,6 +55,7 @@ class _ClosetFilterState extends State<ClosetFilter> {
     setState(() {
       _types = widget.filteredItems.map((item) => item.type).toSet().toList()..sort();
       _colors = widget.filteredItems.map((item) => item.color != null ? item.color! : '').toSet().toList()..sort();
+      _location = widget.filteredItems.map((item) => item.currentLocationId != null ? item.currentLocationId! : '').toSet().toList()..sort();
       _filteredItems = List<Item>.from(widget.filteredItems); // Initialize _filteredItems
     });
   }
@@ -63,8 +68,9 @@ class _ClosetFilterState extends State<ClosetFilter> {
             item.brand.toLowerCase().contains(_searchQuery.toLowerCase());
         final matchesType = _selectedType == null || item.type == _selectedType;
         final matchesColor = _selectedColor == null || item.color == _selectedColor;
+        final matchesLocation = _selectedLocation == null || item.currentLocationId == _selectedLocation;
 
-        return matchesSearch && matchesType && matchesColor;
+        return matchesSearch && matchesType && matchesColor && matchesLocation;
       }).toList();
       
       widget.onFilterApplied(_filteredItems); // Pass the filtered list back
@@ -142,6 +148,34 @@ class _ClosetFilterState extends State<ClosetFilter> {
                       onChanged: (value) {
                         setState(() {
                           _selectedColor = value;
+                        });
+                        _applyFilters();
+                      },
+
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Color dropdown
+                  Expanded(
+                    flex: 1,
+                    child: DropdownButtonFormField<String>(
+                      value: _selectedLocation,
+                      isExpanded: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Location',
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                      ),
+                      items: [
+                        const DropdownMenuItem(value: null, child: Text('All')),
+                        ..._location.map((location) => DropdownMenuItem(
+                              value: location,
+                              child: Text(location),
+                            )),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedLocation = value;
                         });
                         _applyFilters();
                       },

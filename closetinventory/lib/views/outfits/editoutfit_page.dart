@@ -5,6 +5,7 @@ import 'package:closetinventory/controllers/utilities/platform_service.dart';
 import 'package:closetinventory/views/modules/closetfilter_module.dart';
 import 'package:closetinventory/views/modules/closetitemcard_module.dart';
 import 'package:closetinventory/views/modules/responsivewrap_module.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
@@ -12,6 +13,7 @@ import 'package:closetinventory/controllers/utilities/shared_preferences.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:closetinventory/models/outfit_dataobj.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class EditOutfitPage extends StatefulWidget {
   final Outfit closetOutfit;
@@ -30,6 +32,8 @@ class _EditOutfitPageState extends State<EditOutfitPage> {
   final _stylingNotesController = TextEditingController();
   final FirebaseAuthServices _authServices = FirebaseAuthServices();
   final PlatformService _platformService = PlatformService.instance;
+    final TextEditingController _wearCountController = TextEditingController();
+  final TextEditingController _lastWornDateController = TextEditingController();
   
   late String _userId;
   ClosetFilter? closetFilter ;
@@ -38,10 +42,12 @@ class _EditOutfitPageState extends State<EditOutfitPage> {
   List<Item> _filteredItems = [];
   final List<Item> _selectedItems = [];
   bool _isLoading = false;
+    DateTime? _selectedLastWornDate;
   
   // For dropdown options
   List<String> _types = [];
   List<String> _colors = [];
+  List<String> _location = [];
 
  
   StreamSubscription? _itemSubscription;
@@ -53,6 +59,11 @@ class _EditOutfitPageState extends State<EditOutfitPage> {
 
       _outfitNameController.text = widget.closetOutfit.name;
       _stylingNotesController.text = widget.closetOutfit.stylingNotes ?? '';
+      _wearCountController.text = widget.closetOutfit.wearCount.toString();
+      if(widget.closetOutfit.lastWornDate != null){
+        _selectedLastWornDate = widget.closetOutfit.lastWornDate!.toDate();
+        _lastWornDateController.text = DateFormat('MM/dd/yyyy').format(widget.closetOutfit.lastWornDate!.toDate());
+      }
   }
 
   Future<void> _initializeFirebaseAndAuth() async{
@@ -88,6 +99,7 @@ class _EditOutfitPageState extends State<EditOutfitPage> {
         // Extract unique types and colors for dropdowns
         _types = _closetItems.map((item) => item.type).toSet().toList()..sort();
         _colors = _closetItems.map((item) => item.color != null ? item.color! : '').toSet().toList()..sort();
+        _location = _closetItems.map((item) => item.currentLocationId != null ? item.currentLocationId! : '').toSet().toList()..sort();
 
         _filteredItems = tempFilteredItems; // Update _filteredItems with initial filtered list
 
@@ -95,6 +107,7 @@ class _EditOutfitPageState extends State<EditOutfitPage> {
                 filteredItems: _closetItems, // Pass the original _closetItems to the filter
                 filterTypes: _types,
                 filterColors: _colors,
+                filterLocation: _location,
                 onFilterApplied: (filteredList) => _updateFilteredItems(filteredList), // Pass the new callback
               );
       });
@@ -168,8 +181,8 @@ class _EditOutfitPageState extends State<EditOutfitPage> {
         userId: widget.closetOutfit.userId,
         name: _outfitNameController.text.trim(),
         itemIds: _selectedItems.map((item) => item.itemId).toList(),
-        wearCount: widget.closetOutfit.wearCount,
-        lastWornDate : widget.closetOutfit.lastWornDate,
+        wearCount: int.parse(_wearCountController.text),
+        lastWornDate: _selectedLastWornDate != null ? Timestamp.fromDate(_selectedLastWornDate!) : null,
         createdDate : widget.closetOutfit.createdDate,
         stylingNotes: _stylingNotesController.text.trim().isEmpty ? null : _stylingNotesController.text.trim(),
       );
@@ -193,6 +206,22 @@ class _EditOutfitPageState extends State<EditOutfitPage> {
     } finally {
       setState(() {
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _selectLastWornDate(BuildContext context) async{
+    final DateTime? picked = await showDatePicker(
+      context: context, 
+      initialDate: _selectedLastWornDate ?? DateTime.now(),
+      firstDate: _selectedLastWornDate!, 
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        _selectedLastWornDate = picked;
+        _lastWornDateController.text = DateFormat('MM/dd/yyyy').format(picked);
+        _wearCountController.text = '${int.parse(_wearCountController.text)+1}'; 
       });
     }
   }
@@ -316,6 +345,21 @@ class _EditOutfitPageState extends State<EditOutfitPage> {
                 ],
               ),
             ),
+            ResponsiveWrap(
+                children: [ 
+                  Text(
+                    'Times Worn: ${_wearCountController.text};  Last Worn Date: ${_lastWornDateController.text}',
+                  ),
+                  const SizedBox(width: 5),
+
+                  ElevatedButton(
+                    onPressed: () => _selectLastWornDate(context),
+                    child: const Text('Log Worn'),
+                  ),
+                  const SizedBox(width: 16),
+                 
+                ],
+              ),
             const SizedBox(height: 32),
             
             Row(

@@ -22,6 +22,7 @@ class _AddNewItemPageState extends State<AddNewItemPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _itemNameController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
+   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final TextEditingController _sizeController = TextEditingController();
   final TextEditingController _materialController = TextEditingController();
@@ -39,6 +40,7 @@ class _AddNewItemPageState extends State<AddNewItemPage> {
   void dispose() {
     _itemNameController.dispose();
     _brandController.dispose();
+    _locationController.dispose();
     _colorController.dispose();
     _sizeController.dispose();
     _materialController.dispose();
@@ -153,6 +155,7 @@ class _AddNewItemPageState extends State<AddNewItemPage> {
           userId: _userId, 
           name: _itemNameController.text.trim(), 
           type: _selectedCategory ?? 'Other',
+          currentLocationId: _locationController.text.trim().isNotEmpty ? _locationController.text.trim() : '',
           brand: _brandController.text.trim().isNotEmpty ? _brandController.text.trim() : '',
           color: _colorController.text.trim().isNotEmpty ? _colorController.text.trim() : '',
           size: _sizeController.text.trim().isNotEmpty ? _sizeController.text.trim() : '',
@@ -230,6 +233,15 @@ class _AddNewItemPageState extends State<AddNewItemPage> {
                 decoration: const InputDecoration(
                   labelText: 'Brand',
                   hintText: 'e.g. Zara, Nike',
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _locationController,
+                enabled: !_isLoading,
+                decoration: const InputDecoration(
+                  labelText: 'Location',
+                  hintText: 'e.g. Bedroom Closet, Drawer',
                 ),
               ),
               const SizedBox(height: 16),

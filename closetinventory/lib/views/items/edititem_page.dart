@@ -33,6 +33,7 @@ class _EditItemPageState extends State<EditItemPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _itemNameController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final TextEditingController _sizeController = TextEditingController();
   final TextEditingController _materialController = TextEditingController();
@@ -56,6 +57,7 @@ class _EditItemPageState extends State<EditItemPage> {
     // Initialize controllers with existing item data
     _itemNameController.text = widget.closetItem.name;
     _brandController.text = widget.closetItem.brand;
+    _locationController.text = widget.closetItem.currentLocationId ?? '';
     _colorController.text = widget.closetItem.color ?? '';
     _sizeController.text = widget.closetItem.size ?? '';
     _materialController.text = widget.closetItem.material ?? '';
@@ -85,6 +87,7 @@ class _EditItemPageState extends State<EditItemPage> {
   void dispose() {
     _itemNameController.dispose();
     _brandController.dispose();
+    _locationController.dispose();
     _colorController.dispose();
     _sizeController.dispose();
     _materialController.dispose();
@@ -237,6 +240,7 @@ class _EditItemPageState extends State<EditItemPage> {
           name: _itemNameController.text, 
           type: _selectedCategory.toString(),
           brand: _brandController.text,
+          currentLocationId: _locationController.text,
           color: _colorController.text,
           size: _sizeController.text,
           material: _materialController.text,
@@ -288,6 +292,14 @@ class _EditItemPageState extends State<EditItemPage> {
                 decoration: const InputDecoration(
                   labelText: 'Brand',
                   hintText: 'e.g. Zara, Nike',
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _locationController,
+                decoration: const InputDecoration(
+                  labelText: 'Location',
+                  hintText: 'e.g. Bedroom Closet, Drawer',
                 ),
               ),
               const SizedBox(height: 16),

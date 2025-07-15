@@ -36,6 +36,7 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
   // For dropdown options
   List<String> _types = [];
   List<String> _colors = [];
+  List<String> _location = [];
 
  
   StreamSubscription? _itemSubscription;
@@ -73,6 +74,7 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
         // Extract unique types and colors for dropdowns
         _types = _closetItems.map((item) => item.type).toSet().toList()..sort();
         _colors = _closetItems.map((item) => item.color != null ? item.color! : '').toSet().toList()..sort();
+        _location = _closetItems.map((item) => item.currentLocationId != null ? item.currentLocationId! : '').toSet().toList()..sort();
 
         _filteredItems = tempFilteredItems; // Update _filteredItems with initial filtered list
 
@@ -80,6 +82,7 @@ class _AddNewOutfitPageState extends State<AddNewOutfitPage> {
                 filteredItems: _closetItems, // Pass the original _closetItems to the filter
                 filterTypes: _types,
                 filterColors: _colors,
+                filterLocation: _location,
                 onFilterApplied: (filteredList) => _updateFilteredItems(filteredList), // Pass the new callback
               );
       });
