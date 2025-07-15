@@ -189,6 +189,20 @@ class FirebaseDataServices {
     }
   }
 
+  Future<void> updateCascadeDeletingItem(Item editItem) async{
+    try{
+      QuerySnapshot querySnapshot = await _fireStore.collection(CONSTANTS.outfitsCollection).where('itemIds', arrayContains: editItem.itemId).get();
+      for(var doc in querySnapshot.docs){
+        Outfit outfit = Outfit.fromJson(doc.data() as Map<String, dynamic>);
+        outfit.itemIds.removeWhere((itemId) => itemId == editItem.itemId);
+        updateOutfit(outfit);
+      }
+      createLogTransaction("UPDATE CASCADE DELETE OF ITEM ${CONSTANTS.outfitsCollection}", true, editItem.itemId, '');
+    }catch(e){
+      createLogTransaction("UPDATE CASCADE DELETE OF ITEM ${CONSTANTS.outfitsCollection}", false, editItem.itemId, e.toString());
+    }
+  }
+
   Future<void> updateOutfit(Outfit editOutfit) async {
     try{
       updateDocument(CONSTANTS.outfitsCollection, editOutfit.toJson());

@@ -198,6 +198,15 @@ class _EditItemPageState extends State<EditItemPage> {
     }
   }
 
+  void _deleteForm() async{
+     _dataServices.deleteItem(widget.closetItem);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Item deleted!')),
+      );
+      context.goNamed(CONSTANTS.homePage);
+    }
+  
+
   void _submitForm() async{
     if (_formKey.currentState!.validate()) {
       if (_isLoading) return;
@@ -453,6 +462,10 @@ class _EditItemPageState extends State<EditItemPage> {
                       Navigator.pop(context);
                     },
                     child: const Text('Cancel'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _deleteForm,
+                    child: const Text('Delete Item'),
                   ),
                   ElevatedButton(
                     onPressed: _submitForm,

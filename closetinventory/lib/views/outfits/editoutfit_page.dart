@@ -132,6 +132,17 @@ class _EditOutfitPageState extends State<EditOutfitPage> {
     });
   }
 
+  void _deleteOutfit() async {
+    // Save to Firebase
+      await _authServices.getDataServices().deleteOutfit(widget.closetOutfit);
+
+      mounted ? ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Outfit deleted from Firebase!')),
+      ) : null ;
+      
+      mounted ? context.goNamed(CONSTANTS.homePage) : null;
+  }
+
   void _saveOutfit() async {
     if (_outfitNameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -313,6 +324,13 @@ class _EditOutfitPageState extends State<EditOutfitPage> {
                 ElevatedButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Cancel',),
+                ),
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _deleteOutfit,
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
+                  child: _isLoading 
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text('Delete Outfit', style: TextStyle(color:  Colors.white,),),
                 ),
                 ElevatedButton(
                   onPressed: _isLoading ? null : _saveOutfit,
