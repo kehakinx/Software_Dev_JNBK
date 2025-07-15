@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                     icon: Icons.assignment_outlined,
                     number: _outfits.length,
                     color: CONSTANTS.successColor,
-                    link: CONSTANTS.homePage,
+                    link: CONSTANTS.viewallOutfitsPage,
                     ratio: _platformService.isWeb ? 1 : .7,
                   ),
                   DashCard(
