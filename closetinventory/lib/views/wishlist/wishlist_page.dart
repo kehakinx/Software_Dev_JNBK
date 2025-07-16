@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:closetinventory/controllers/firebase/authentication_service.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';
-import 'package:closetinventory/controllers/utilities/platform_service.dart';
 import 'package:closetinventory/controllers/utilities/shared_preferences.dart';
 import 'package:closetinventory/models/wishlistitem_dataobj.dart';
 import 'package:closetinventory/views/home_page.dart';
@@ -25,7 +24,6 @@ class _WishlistPageState extends State<WishlistPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
   final FirebaseAuthServices _authServices = FirebaseAuthServices();
-  final PlatformService _platformService = PlatformService.instance;
 
 
    late List<WishlistItem> _wishList = [];
