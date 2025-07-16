@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:closetinventory/models/item_dataobj.dart';
+import 'package:closetinventory/models/wishlistitem_dataobj.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:closetinventory/models/outfit_dataobj.dart';
@@ -29,6 +30,8 @@ class FirebaseDataServices {
           await doc.update({'itemId': doc.id});
         case CONSTANTS.outfitsCollection:
           await doc.update({'outfitId': doc.id});
+        case CONSTANTS.wishListsCollection:
+          await doc.update({'wishlistItem': doc.id});
         default:
          break;
       }
@@ -85,6 +88,16 @@ class FirebaseDataServices {
       createLogTransaction("CREATE_OUTFIT", true, outfit.outfitId, '');
     } catch (e) {
       createLogTransaction("CREATE_OUTFIT", false, outfit.outfitId, e.toString());
+      rethrow;
+    }
+  }
+
+  Future<void> createWishlist(WishlistItem wishListItem) async {
+    try {
+      await createDocument(CONSTANTS.wishListsCollection, wishListItem.toJson());
+      createLogTransaction("CREATE_WISHLISTITEM", true, wishListItem.wishlistItem, '');
+    } catch (e) {
+      createLogTransaction("CREATE_WISHLISTITEM", false, wishListItem.wishlistItem, e.toString());
       rethrow;
     }
   }
@@ -171,6 +184,9 @@ class FirebaseDataServices {
         case CONSTANTS.outfitsCollection:
           recordId = data['outfitId'];
           await _fireStore.collection(collection).doc(recordId).update(data);
+        case CONSTANTS.wishListsCollection:
+          recordId = data['wishlistItem'];
+          await _fireStore.collection(collection).doc(recordId).update(data);
         default:
           break;
       }
@@ -212,6 +228,15 @@ class FirebaseDataServices {
     }
   }
 
+  Future<void> updateWishlist(WishlistItem editWishlistItem) async {
+    try{
+      updateDocument(CONSTANTS.outfitsCollection, editWishlistItem.toJson());
+      createLogTransaction("UPDATE ${CONSTANTS.outfitsCollection}", true, editWishlistItem.wishlistItem, '');
+    }catch(e){
+      createLogTransaction("UPDATE ${CONSTANTS.outfitsCollection}", false, editWishlistItem.wishlistItem, e.toString());
+    }
+  }
+
   // DELETE FUNCTIONS
   Future<void> deleteDocument(
     String collection,
@@ -226,6 +251,9 @@ class FirebaseDataServices {
           
         case CONSTANTS.outfitsCollection:
           recordId = data['outfitId'];
+          await _fireStore.collection(collection).doc(recordId).delete();
+        case CONSTANTS.wishListsCollection:
+          recordId = data['wishlistItem'];
           await _fireStore.collection(collection).doc(recordId).delete();
         default:
           break;
@@ -251,6 +279,15 @@ class FirebaseDataServices {
       createLogTransaction("DELETE ${CONSTANTS.outfitsCollection}", true, editOutfit.outfitId, '');
     }catch(e){
       createLogTransaction("DELETE ${CONSTANTS.outfitsCollection}", false, editOutfit.outfitId, e.toString());
+    }
+  }
+
+  Future<void> deleteWishlist(WishlistItem editOWishList) async {
+    try{
+      deleteDocument(CONSTANTS.wishListsCollection, editOWishList.toJson());
+      createLogTransaction("DELETE ${CONSTANTS.wishListsCollection}", true, editOWishList.wishlistItem, '');
+    }catch(e){
+      createLogTransaction("DELETE ${CONSTANTS.wishListsCollection}", false, editOWishList.wishlistItem, e.toString());
     }
   }
 }

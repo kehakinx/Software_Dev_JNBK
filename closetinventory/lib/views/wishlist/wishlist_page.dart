@@ -1,30 +1,15 @@
+import 'dart:async';
+
+import 'package:closetinventory/controllers/firebase/authentication_service.dart';
+import 'package:closetinventory/controllers/utilities/constants.dart';
+import 'package:closetinventory/controllers/utilities/platform_service.dart';
+import 'package:closetinventory/controllers/utilities/shared_preferences.dart';
+import 'package:closetinventory/models/wishlistitem_dataobj.dart';
 import 'package:closetinventory/views/home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-/*
-void main() {
-  runApp(const MyApp());
-}
+import 'package:go_router/go_router.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'My Closet Wishlist',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-      ),
-      home: const WishlistPage(), // Keep Wishlist as initial page
-    );
-  }
-}
-*/
 
 class WishlistPage extends StatefulWidget {
   final bool fromHome;
@@ -38,47 +23,124 @@ class WishlistPage extends StatefulWidget {
 class _WishlistPageState extends State<WishlistPage> {
   final TextEditingController _itemNameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _brandController = TextEditingController();
+  final FirebaseAuthServices _authServices = FirebaseAuthServices();
+  final PlatformService _platformService = PlatformService.instance;
 
-  final List<WishlistItem> _wishlistItems = [
-    WishlistItem(
-      name: 'Vintage Leather Jacket',
-      description: 'Classic brown leather jacket',
-    ),
-    WishlistItem(
-      name: 'Designer Sneakers',
-      description: 'Limited edition white sneakers',
-    ),
-    WishlistItem(
-      name: 'Cashmere Scarf',
-      description: 'Soft grey cashmere scarf',
-    ),
-  ];
 
-  void _addNewItem() {
-    if (_itemNameController.text.isNotEmpty) {
-      setState(() {
-        _wishlistItems.add(
-          WishlistItem(
-            name: _itemNameController.text,
-            description: _descriptionController.text,
-          ),
-        );
-        _itemNameController.clear();
-        _descriptionController.clear();
-      });
-      FocusScope.of(context).unfocus();
-    }
-  }
+   late List<WishlistItem> _wishList = [];
+   late String _userId;
+    String? _selectedCategory;
+     bool _isLoading = false;
 
-  void _removeItem(int index) {
-    setState(() {
-      _wishlistItems.removeAt(index);
+  StreamSubscription? _wishlistSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+      _initializeFirebaseAndAuth();
+
+      
+      }
+  
+
+    Future<void> _initializeFirebaseAndAuth() async{
+    _authServices.getAuth().authStateChanges().listen((User? user){
+      if(user != null){
+        setState(() {
+          _userId = MyPreferences.getString('prefUserKey');
+        });
+        _loadCloset();
+      }else{
+        mounted ? context.go(CONSTANTS.loginPage) : null;
+      }
     });
   }
 
-  void _markAsPurchased(int index) {
-    setState(() {
-      _wishlistItems.removeAt(index);
+  Future<void> _loadCloset() async {
+    _wishlistSubscription?.cancel();
+   
+    _wishlistSubscription = _authServices.getDataServices().getFirestore().collection(CONSTANTS.wishListsCollection).where('userId', isEqualTo: _userId).snapshots().listen((snapshot){
+      if(!mounted) return;
+
+      setState(() {
+        _wishList = snapshot.docs.map((doc) => WishlistItem.fromDocument(doc)).toList();
+       
+      });
+    },
+    onError: (error){
+      if(!mounted) return;
+      setState(() {
+        
+      });
+    });
+  }
+
+   @override
+   void dispose(){
+    _wishlistSubscription?.cancel();
+
+    super.dispose();
+   }
+
+  void _submitForm() async {
+   
+      if (_isLoading) return;
+      
+      setState(() {
+        _isLoading = true;
+        
+      });
+
+      try {
+        
+
+        WishlistItem newItem = WishlistItem(
+            wishlistItem: '',
+            name: _itemNameController.text,
+            userId: _userId,
+            description: _descriptionController.text,
+            type: _selectedCategory ?? 'Other',
+            brand: _brandController.text,
+          );
+        
+        await _authServices.getDataServices().createWishlist(newItem);
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Item added successfully!'
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+       }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+             _itemNameController.clear();
+            _descriptionController.clear();
+          
+          FocusScope.of(context).unfocus();
+          });
+        }
+      }
+    
+  }
+
+  void _removeItem(WishlistItem index) {
+    setState(() async {
+       await _authServices.getDataServices().deleteWishlist(index);
     });
   }
 
@@ -150,7 +212,7 @@ class _WishlistPageState extends State<WishlistPage> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        TextField(
+                        TextFormField(
                           controller: _itemNameController,
                           decoration: InputDecoration(
                             labelText: 'Item Name',
@@ -173,8 +235,52 @@ class _WishlistPageState extends State<WishlistPage> {
                             ),
                           ),
                         ),
+                        DropdownButtonFormField<String>(
+                          value: _selectedCategory,
+                          decoration: const InputDecoration(
+                            labelText: 'Category *',
+                          ),
+                          hint: const Text('Select a category'),
+                          items: CONSTANTS.categories
+                              .map((cat) => DropdownMenuItem(
+                                    value: cat,
+                                    child: Text(cat),
+                                  ))
+                              .toList(),
+                          validator: (value) =>
+                              value == null ? 'Category is required' : null,
+                          onChanged: _isLoading ? null : (value) {
+                            setState(() {
+                              _selectedCategory = value;
+                            });
+                          },
+                        ),
                         const SizedBox(height: 16),
-                        TextField(
+                        TextFormField(
+                          controller: _brandController,
+                          decoration: InputDecoration(
+                            labelText: 'Brand',
+                            labelStyle: const TextStyle(
+                              color: Colors.deepPurple,
+                            ),
+                            hintText: 'e.g., Nike, GAP',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                color: Colors.deepPurple,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                color: Colors.deepPurple,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
                           controller: _descriptionController,
                           decoration: InputDecoration(
                             labelText: 'Description (Optional)',
@@ -204,7 +310,7 @@ class _WishlistPageState extends State<WishlistPage> {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: _addNewItem,
+                            onPressed: _submitForm,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.deepPurple,
                               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -243,7 +349,7 @@ class _WishlistPageState extends State<WishlistPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate((context, index) {
-                final item = _wishlistItems[index];
+                final item = _wishList[index];
                 return Card(
                   elevation: 2,
                   margin: const EdgeInsets.only(bottom: 16),
@@ -274,7 +380,7 @@ class _WishlistPageState extends State<WishlistPage> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             OutlinedButton(
-                              onPressed: () => _removeItem(index),
+                              onPressed: () => _removeItem(item),
                               style: OutlinedButton.styleFrom(
                                 side: const BorderSide(color: Colors.red),
                                 shape: RoundedRectangleBorder(
@@ -288,7 +394,7 @@ class _WishlistPageState extends State<WishlistPage> {
                             ),
                             const SizedBox(width: 12),
                             ElevatedButton(
-                              onPressed: () => _markAsPurchased(index),
+                              onPressed: () => _removeItem(item),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.deepPurple,
                                 shape: RoundedRectangleBorder(
@@ -306,18 +412,11 @@ class _WishlistPageState extends State<WishlistPage> {
                     ),
                   ),
                 );
-              }, childCount: _wishlistItems.length),
+              }, childCount: _wishList.length),
             ),
           ),
         ],
       ),
     );
   }
-}
-
-class WishlistItem {
-  final String name;
-  final String description;
-
-  WishlistItem({required this.name, this.description = ''});
 }

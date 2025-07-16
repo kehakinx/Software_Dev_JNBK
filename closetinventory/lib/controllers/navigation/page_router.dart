@@ -9,7 +9,7 @@ import 'package:closetinventory/views/items/viewallitems_page.dart';
 import 'package:closetinventory/views/outfits/addnewoutfit_page.dart';
 import 'package:closetinventory/views/outfits/editoutfit_page.dart';
 import 'package:closetinventory/views/outfits/viewoutfits_page.dart';
-import 'package:closetinventory/views/outfits/wishlist.dart';
+import 'package:closetinventory/views/wishlist/wishlist_page.dart';
 import 'package:closetinventory/views/splash_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:closetinventory/controllers/utilities/constants.dart';

@@ -4,6 +4,7 @@ class WishlistItem {
   final String wishlistItem; // Primary key (UID)
   final String userId; // Foreign key (UID)
   final String name;
+  final String description;
   final String type;
   final String brand;
   final double? desiredPrice;
@@ -16,6 +17,7 @@ class WishlistItem {
     required this.wishlistItem,
     required this.userId,
     required this.name,
+    required this.description,
     required this.type,
     required this.brand,
     this.desiredPrice,
@@ -30,6 +32,7 @@ class WishlistItem {
       wishlistItem: json['wishlistItem'] as String,
       userId: json['userId'] as String,
       name: json['name'] as String,
+      description: json['description'] as String,
       type: json['type'] as String,
       brand: json['brand'] as String,
       desiredPrice: (json['desiredPrice'] != null)
@@ -51,6 +54,7 @@ class WishlistItem {
       wishlistItem: doc['wishlistItem'] as String,
       userId: doc['userId'] as String,
       name: doc['name'] as String,
+      description: doc['description'] as String,
       type: doc['type'] as String,
       brand: doc['brand'] as String,
       desiredPrice: (doc['desiredPrice'] != null)
@@ -72,6 +76,7 @@ class WishlistItem {
       'wishlistItem': wishlistItem,
       'userId': userId,
       'name': name,
+      'description': description,
       'type': type,
       'brand': brand,
       'desiredPrice': desiredPrice,

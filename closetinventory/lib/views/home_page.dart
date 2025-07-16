@@ -6,12 +6,13 @@ import 'package:closetinventory/controllers/utilities/platform_service.dart';
 import 'package:closetinventory/controllers/utilities/shared_preferences.dart';
 import 'package:closetinventory/models/item_dataobj.dart';
 import 'package:closetinventory/models/outfit_dataobj.dart';
+import 'package:closetinventory/models/wishlistitem_dataobj.dart';
 import 'package:closetinventory/views/modules/button_module.dart';
 import 'package:closetinventory/views/modules/dashcard_module.dart';
 import 'package:closetinventory/views/modules/closetitemcard_module.dart';
 import 'package:closetinventory/views/modules/outfitcard_module.dart';
 import 'package:closetinventory/views/modules/responsivewrap_module.dart';
-import 'package:closetinventory/views/outfits/wishlist.dart';
+import 'package:closetinventory/views/wishlist/wishlist_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -29,8 +30,10 @@ class _HomePageState extends State<HomePage> {
   late String _userId;
   late List<Item> _closetItems = [];
   late List<Outfit> _outfits = [];
+  late List<WishlistItem> _wishList = [];
   StreamSubscription? _itemSubscription;
   StreamSubscription? _outfitSubscription;
+  StreamSubscription? _wishListSubscription;
 
   @override
   void initState() {
@@ -97,6 +100,29 @@ class _HomePageState extends State<HomePage> {
             if (!mounted) return;
           },
         );
+
+    _wishListSubscription?.cancel();
+
+    _wishListSubscription = _authServices
+        .getDataServices()
+        .getFirestore()
+        .collection(CONSTANTS.wishListsCollection)
+        .where('userId', isEqualTo: _userId)
+        .snapshots()
+        .listen(
+          (snapshot) {
+            if (!mounted) return;
+
+            setState(() {
+              _wishList = snapshot.docs
+                  .map((doc) => WishlistItem.fromDocument(doc))
+                  .toList();
+            });
+          },
+          onError: (error) {
+            if (!mounted) return;
+          },
+        );
   }
 
   @override
@@ -144,14 +170,7 @@ class _HomePageState extends State<HomePage> {
                     title: 'Wishlist',
                     color: Colors.pink,
                     ratio: _platformService.isWeb ? 1 : .8,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const WishlistPage(),
-                        ),
-                      );
-                    },
+                    link: CONSTANTS.wishlistPage,
                   ),
                 ],
               ),
@@ -192,6 +211,15 @@ class _HomePageState extends State<HomePage> {
                         .length,
                     color: CONSTANTS.errorColor,
                     link: CONSTANTS.viewallItemsPage,
+                    extra: "declutter",
+                    ratio: _platformService.isWeb ? 1 : .7,
+                  ),
+                  DashCard(
+                    title: "Wish List",
+                    icon: Icons.favorite_border,
+                    number: _wishList.length,
+                    color: CONSTANTS.infoColor,
+                    link: CONSTANTS.wishlistPage,
                     extra: "declutter",
                     ratio: _platformService.isWeb ? 1 : .7,
                   ),
