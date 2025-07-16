@@ -12,7 +12,6 @@ import 'package:closetinventory/views/modules/dashcard_module.dart';
 import 'package:closetinventory/views/modules/closetitemcard_module.dart';
 import 'package:closetinventory/views/modules/outfitcard_module.dart';
 import 'package:closetinventory/views/modules/responsivewrap_module.dart';
-import 'package:closetinventory/views/wishlist/wishlist_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -129,6 +128,7 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     _itemSubscription?.cancel();
     _outfitSubscription?.cancel();
+    _wishListSubscription?.cancel();
     super.dispose();
   }
 
