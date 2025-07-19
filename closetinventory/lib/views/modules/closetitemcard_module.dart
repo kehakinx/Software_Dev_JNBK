@@ -176,7 +176,7 @@ class _ClosetItemCardState extends State<ClosetItemCard> {
         height: double.infinity,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(strokeWidth: 2),
           );
         },
