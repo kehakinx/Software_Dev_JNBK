@@ -135,6 +135,18 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('My Closet'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              // Navigate to viewallitems with search enabled instead
+              context.pushNamed(CONSTANTS.viewallItemsPage);
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -163,6 +175,13 @@ class _HomePageState extends State<HomePage> {
                     title: 'Plan Outfits',
                     color: CONSTANTS.primaryButtonColor,
                     link: CONSTANTS.addOutfitPage,
+                    ratio: _platformService.isWeb ? 1 : .8,
+                  ),
+                  CustomButtonModule(
+                    icon: Icons.search,
+                    title: 'Search Items',
+                    color: CONSTANTS.successColor,
+                    link: CONSTANTS.viewallItemsPage,
                     ratio: _platformService.isWeb ? 1 : .8,
                   ),
                   CustomButtonModule(
@@ -259,7 +278,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-                            Padding(
+              Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
                   CONSTANTS.dashboardDigitalOutfitsTextEn,
@@ -271,7 +290,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 16),
               ResponsiveWrap(
-                children: [ 
+                children: [
                   SizedBox(
                     width: double.infinity,
                     height: 300,
