@@ -6,6 +6,7 @@ import 'package:closetinventory/views/home_page.dart';
 import 'package:closetinventory/views/items/addnewitem_page.dart';
 import 'package:closetinventory/views/items/edititem_page.dart';
 import 'package:closetinventory/views/items/viewallitems_page.dart';
+import 'package:closetinventory/views/items/search_results.dart';
 import 'package:closetinventory/views/outfits/addnewoutfit_page.dart';
 import 'package:closetinventory/views/outfits/editoutfit_page.dart';
 import 'package:closetinventory/views/outfits/viewoutfits_page.dart';
@@ -88,6 +89,17 @@ final GoRouter router = GoRouter(
             key: state.pageKey, 
             child: WishlistPage(
               fromHome: state.extra == null, 
+            ),
+          ),
+    ),
+    GoRoute(
+      name: CONSTANTS.searchResultsPage,
+      path: CONSTANTS.searchResultsPage,
+      pageBuilder: (context, state) =>
+          NoTransitionPage<void>(
+            key: state.pageKey, 
+            child: SearchResultsPage(
+              allItems: state.extra as List<Item>,
             ),
           ),
     ),
