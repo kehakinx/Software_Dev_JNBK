@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
    }
 
 
-  @override
+  @override 
   Widget build(BuildContext context) {
     return BackgroundWrapper(
       child: Scaffold(
@@ -234,9 +234,19 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     CONSTANTS.dashboardDigitalOutfitsTextEn,
-                    style: TextStyle(
-                      fontSize: _platformService.isWeb ? 36 : 18,
-                      fontWeight: FontWeight.bold,
+                    style: GoogleFonts.raleway(
+                      fontSize: _platformService.isWeb ? 36 : 24,
+                      fontWeight: FontWeight.w300,
+                      letterSpacing: 3,
+                      color: Colors.black87,
+                      height: 1.2,
+                      shadows: [
+                        Shadow(
+                          color: Colors.grey.withOpacity(0.25),
+                          blurRadius: 2,
+                          offset: const Offset(1, 1),
+                        ),
+                      ],
                     ),
                   ),
                 ),
