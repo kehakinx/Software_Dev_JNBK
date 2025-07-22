@@ -27,7 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black87),
-            onPressed: () => context.pop(),
+            onPressed: () => context.go(CONSTANTS.homePage), // Changed from context.pop()
           ),
           title: Text(
             'My Profile',
