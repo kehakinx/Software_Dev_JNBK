@@ -10,6 +10,7 @@ import 'package:closetinventory/views/items/search_results.dart';
 import 'package:closetinventory/views/outfits/addnewoutfit_page.dart';
 import 'package:closetinventory/views/outfits/editoutfit_page.dart';
 import 'package:closetinventory/views/outfits/viewoutfits_page.dart';
+import 'package:closetinventory/views/profile_page.dart';
 import 'package:closetinventory/views/wishlist/wishlist_page.dart';
 import 'package:closetinventory/views/splash_page.dart';
 import 'package:go_router/go_router.dart';
@@ -102,6 +103,14 @@ final GoRouter router = GoRouter(
               allItems: state.extra as List<Item>,
             ),
           ),
+    ),
+    GoRoute(
+      path: CONSTANTS.profilePage,
+      name: CONSTANTS.profilePage,
+      pageBuilder: (context, state) => NoTransitionPage<void>(
+        key: state.pageKey,
+        child: const ProfilePage(),
+      ),
     ),
   ],
 );

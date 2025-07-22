@@ -103,6 +103,16 @@ class _HomePageState extends State<HomePage> {
     return BackgroundWrapper(
       child: Scaffold(
         backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.person, color: Colors.black87),
+              onPressed: () => context.go(CONSTANTS.profilePage),
+            ),
+          ],
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
